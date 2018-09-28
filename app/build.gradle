@@ -27,6 +27,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
+    implementation "android.arch.navigation:navigation-fragment:$navigationVersion"
+    implementation "android.arch.navigation:navigation-ui:$navigationVersion"
 
     // Testing
     testImplementation "junit:junit:$junitVersion"
