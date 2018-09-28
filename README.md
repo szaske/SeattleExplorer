@@ -15,9 +15,6 @@ Finally, if anyone using this repo/code find bugs please submit an issue using G
 MY STARTING POINT
 I consider myself a beginner Android developer.  I've written one large-ish Android application.  My application was fairly complex; I wrote custom views, used Google location services and utilized Firebase as my backend. But I don't have any experience with Fragments, Databinding or Dagger and like most beginner developers most of my code ended up in the Activity. Now it's time I grow as a developer and learn the proper way to architect an Android app.
 
-STEP #1.  Creating a new Android project.  I'm using Android Studio 3.2.  I created a new 
-Android project, gave it a name (Seattle Explorer), chose a minimum SDK (21 Lollipop) and when 
-asked to chose an activity type, I chose Fragment+Viewmodel.  I chose Fragment+ViewModel because it's 
-a new option added to help facilitate the use of Fragments and ViewModels, two things I'll want to 
-add to my project.  I'm hoping the boilerplate code will be helpful.  WOOHOO I have a working Android
-app with fragments already.  I added this README.md file and this will be my first commit.
+STEP #1.  Creating a new Android project.  I'm using Android Studio 3.2.  I created a new Android project, gave it a name (Seattle Explorer), chose a minimum SDK (21 Lollipop) and when asked to chose an activity type, I chose Fragment+Viewmodel.  I chose Fragment+ViewModel because it's a new option added to help facilitate the use of Fragments and ViewModels, two things I'll want to add to my project.  I'm hoping the boilerplate code will be helpful.  WOOHOO I have a working Android app with fragments already.  I added this README.md file and this will be my first commit.
+
+STEP #2. Basic project clean up.  I've created enough Android apps to know that it's nice to have some organization in my build.gradle files.  I'll start by consolidating all my versions numbers in the project build.gradle file.  This it pretty standard, just create an ext section within the buildscript section.  I also lowered the compileSdkVersion to 27 so my app will work with more phones, but still work with the Jetpack Navigation library (which requires AppCompat 27+).  It's best to do this at the start of a project before I add any code.
