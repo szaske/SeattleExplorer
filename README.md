@@ -18,3 +18,10 @@ I consider myself a beginner Android developer.  I've written one large-ish Andr
 STEP #1.  Creating a new Android project.  I'm using Android Studio 3.2.  I created a new Android project, gave it a name (Seattle Explorer), chose a minimum SDK (21 Lollipop) and when asked to chose an activity type, I chose Fragment+Viewmodel.  I chose Fragment+ViewModel because it's a new option added to help facilitate the use of Fragments and ViewModels, two things I'll want to add to my project.  I'm hoping the boilerplate code will be helpful.  WOOHOO I have a working Android app with fragments already.  I added this README.md file and this will be my first commit.
 
 STEP #2. Basic project clean up.  I've created enough Android apps to know that it's nice to have some organization in my build.gradle files.  I'll start by consolidating all my versions numbers in the project build.gradle file.  This it pretty standard, just create an ext section within the buildscript section.  I also lowered the compileSdkVersion to 27 so my app will work with more phones, but still work with the Jetpack Navigation library (which requires AppCompat 27+).  It's best to do this at the start of a project before I add any code.
+
+Step #3: Configuring Jetpack Navigation.  We'll we have a working Android app, with a Fragment and viewModel but I need to convert this boilerplate code to instead be using Google's new Navigation library.  To configure Navigation you need to do the following:
+3a. Make sure you're using the latest version of Android 3.2.
+3b. In Android Studio visit FILE -> SETTINGS and go to the Experimental tab.  Make sure "Enable Navigation Editor" is enabled. 
+3c. Add the two new dependencies for Navigation they are: android.arch.navigation:navigation-fragment, and android.arch.navigation:navigation-ui
+3d. Add the navigation-safe-args-gradle-plugin Gradle plugin in the Project build.gradle.
+
