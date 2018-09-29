@@ -25,3 +25,9 @@ Step #3: Configuring Jetpack Navigation.  We'll we have a working Android app, w
 3c. Add the two new dependencies for Navigation they are: android.arch.navigation:navigation-fragment, and android.arch.navigation:navigation-ui
 3d. Add the navigation-safe-args-gradle-plugin Gradle plugin in the Project build.gradle.
 
+STEP #4: Setting up Navigation.  Now that Navigation is configured, I'll go ahead and create a basic setup with two fragments and viewmodels.  Here are the substeps needed:
+4a. Start by adding a navigation graph.  You do this by right-clicking the res folder and selecting NEW -> ANDROID RESOURCE FILE, naming it nav_graph and for resource type selecting "Navigation".  That will create a navigation resource folder and create this new XML file.
+4b. I created 2 new fragments using the "Create Blank Fragment" tool within the navigation editor.  The only thing I added was the code to instantiate a viewmodel within each fragment.
+4c. Back in the editor I added both fragments to the graph, made StartFragment the Starting fragment, and then connected the two fragments with an action.  For more information see (https://codelabs.developers.google.com/codelabs/android-navigation/#0)
+4d. Next you need to add a placeholder view within the layout of your Activity.  This fragment view Id is nav_host_fragment.
+Finally to test the functionality of my viewModels I added a simple link in the PoiDetailsFragment from it's viewModel

@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -31,6 +29,7 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui:$navigationVersion"
 
     // Testing
+    implementation 'com.android.support:support-v4:27.1.1'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
