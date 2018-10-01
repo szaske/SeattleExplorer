@@ -9,8 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.loc8r.seattleexplorer.R
+import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.ui.interfaces.OnFragmentInteractionListener
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.poi_details_fragment.*
+import javax.inject.Inject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,8 +36,9 @@ class PoiDetailsFragment : Fragment() {
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    // Save a variable for the viewModel
-    private lateinit var viewModel: PoiDetailViewModel
+    // Here I'm injecting the viewModelFactory and NOT the viewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var poiDetailViewModel: PoiDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +60,8 @@ class PoiDetailsFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
+        // Here's I'm kicking off the injection process for the Fragment
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
             listener = context
@@ -91,10 +97,12 @@ class PoiDetailsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(PoiDetailViewModel::class.java)
+
+        // assigning the viewmodel according to the map in the viewModelFactory
+        poiDetailViewModel = ViewModelProviders.of(this,viewModelFactory).get(PoiDetailViewModel::class.java)
 
         // I'm able to skip findViewById() because I'm using the kotlin-android-extensions plugin
         // NICE
-        poiDetailsFragment_txt.text = viewModel.getMessage()
+        poiDetailsFragment_txt.text = poiDetailViewModel.getMessage()
     }
 }

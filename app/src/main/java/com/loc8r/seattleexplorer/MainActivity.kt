@@ -4,15 +4,19 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.loc8r.seattleexplorer.ui.interfaces.OnFragmentInteractionListener
+import dagger.android.AndroidInjection
 
 
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("Tes", "Dagger start")
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
