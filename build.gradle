@@ -17,6 +17,7 @@ buildscript {
         lifecycleVersion = '1.1.1'
         navigationVersion = '1.0.0-alpha06'
         daggerVersion = '2.17'
+        rxJavaVersion = '2.3.0'
 
         // Testing
         junitVersion = '4.12'
