@@ -36,6 +36,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
+    //Domain
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxJavaVersion"
+
     // Testing
     implementation 'com.android.support:support-v4:27.1.1'
     testImplementation "junit:junit:$junitVersion"
