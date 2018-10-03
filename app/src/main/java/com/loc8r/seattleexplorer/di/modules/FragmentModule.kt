@@ -4,7 +4,7 @@
 
 package com.loc8r.seattleexplorer.di.modules
 
-import com.loc8r.seattleexplorer.ui.poi_detail.PoiDetailsFragment
+import com.loc8r.seattleexplorer.presentation.poi_detail.PoiDetailsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

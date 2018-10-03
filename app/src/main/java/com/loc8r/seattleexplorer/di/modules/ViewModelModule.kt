@@ -3,7 +3,9 @@ package com.loc8r.seattleexplorer.di.modules
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.loc8r.seattleexplorer.di.ViewModelFactory
-import com.loc8r.seattleexplorer.ui.poi_detail.PoiDetailViewModel
+import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
+import com.loc8r.seattleexplorer.presentation.poi_detail.PoiDetailViewModel
+import com.loc8r.seattleexplorer.presentation.uiMainThread
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -12,6 +14,9 @@ import kotlin.reflect.KClass
 
 @Module
 internal abstract class ViewModelModule {
+
+    @Binds
+    abstract fun bindPostExecutionThread(uiMainThread: uiMainThread): ObservingThread
 
     @Binds
     @IntoMap

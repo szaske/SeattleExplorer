@@ -10,7 +10,7 @@
  * for more information.
  */
 
-package com.loc8r.seattleexplorer.ui.interfaces
+package com.loc8r.seattleexplorer.presentation.interfaces
 
 import android.net.Uri
 

@@ -37,7 +37,7 @@ abstract class ObservableUseCaseBase<T, in Params> constructor(
     }
 
     // A method that clears out the disposable observers we've created.
-    // This should be done when an Android activity closes
+    // This should be done when the viewmodel is destroyed.
     fun dispose() {
         disposables.dispose()
     }
