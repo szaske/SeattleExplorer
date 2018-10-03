@@ -6,12 +6,12 @@
     app:startDestination="@id/startFragment">
     <fragment
         android:id="@+id/poiDetailsFragment"
-        android:name="com.loc8r.seattleexplorer.ui.poi_detail.PoiDetailsFragment"
+        android:name="com.loc8r.seattleexplorer.presentation.poi_detail.PoiDetailsFragment"
         android:label="poi_details_fragment"
         tools:layout="@layout/poi_details_fragment" />
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.loc8r.seattleexplorer.ui.start.StartFragment"
+        android:name="com.loc8r.seattleexplorer.presentation.start.StartFragment"
         android:label="StartFragment" >
         <action
             android:id="@+id/action_startFragment_to_poiDetailsFragment"

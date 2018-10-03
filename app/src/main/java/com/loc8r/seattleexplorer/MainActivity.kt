@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.loc8r.seattleexplorer.ui.interfaces.OnFragmentInteractionListener
+import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import dagger.android.AndroidInjection
 
 

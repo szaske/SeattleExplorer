@@ -1,5 +1,6 @@
-package com.loc8r.seattleexplorer.ui.start
+package com.loc8r.seattleexplorer.presentation.poi_detail
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.Uri
@@ -8,11 +9,13 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import com.loc8r.seattleexplorer.R
-import com.loc8r.seattleexplorer.ui.interfaces.OnFragmentInteractionListener
-import kotlinx.android.synthetic.main.start_fragment.*
+import com.loc8r.seattleexplorer.di.ViewModelFactory
+import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
+import com.loc8r.seattleexplorer.presentation.models.Poi_Presentation
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.poi_details_fragment.*
+import javax.inject.Inject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,18 +28,20 @@ private const val ARG_PARAM2 = "param2"
  * Activities that contain this fragment must implement the
  * [OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [StartFragment.newInstance] factory method to
+ * Use the [PoiDetailsFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class StartFragment : Fragment() {
+class PoiDetailsFragment : Fragment() {
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    // Save a variable for the viewModel
-    private lateinit var viewModel: StartViewModel
+    // Here I'm injecting the viewModelFactory and NOT the viewModel
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var poiDetailViewModel: PoiDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +54,7 @@ class StartFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.start_fragment, container, false)
+        return inflater.inflate(R.layout.poi_details_fragment, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -58,6 +63,8 @@ class StartFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
+        // Here's I'm kicking off the injection process for the Fragment
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
             listener = context
@@ -78,12 +85,12 @@ class StartFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment StartFragment.
+         * @return A new instance of fragment PoiDetailsFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                StartFragment().apply {
+                PoiDetailsFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
@@ -93,24 +100,19 @@ class StartFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(StartViewModel::class.java)
-        // TODO: Use the ViewModel
+
+        // assigning the viewmodel according to the map in the viewModelFactory
+        poiDetailViewModel = ViewModelProviders.of(this,viewModelFactory).get(PoiDetailViewModel::class.java)
+
+        // This Requests from the Presentation layer the liveData stream which is nothing
+        poiDetailViewModel.getPois().observe(this,
+                Observer<List<Poi_Presentation>> {
+
+                    // let is used to test against null
+                    it?.let {
+                        poiDetailsFragment_txt.text = it[0].name
+                    }
+                })
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val options = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-
-        // This navigates according to the id's within the nav_graph, not a view in a layout
-        goto_poiDetail_bt?.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.poiDetailsFragment, null, options)
-        }
-
-    }
 }

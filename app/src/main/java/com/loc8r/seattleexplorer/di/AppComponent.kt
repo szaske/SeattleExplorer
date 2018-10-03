@@ -4,6 +4,7 @@ import android.app.Application
 import com.loc8r.seattleexplorer.SeattleExplorerApplication
 import com.loc8r.seattleexplorer.di.modules.ActivityModule
 import com.loc8r.seattleexplorer.di.modules.FragmentModule
+import com.loc8r.seattleexplorer.di.modules.RepositoryModule
 import com.loc8r.seattleexplorer.di.modules.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
@@ -16,7 +17,8 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     ActivityModule::class,
     FragmentModule::class,
-    ViewModelModule::class])
+    ViewModelModule::class,
+    RepositoryModule::class])
 interface AppComponent {
 
     //I now need to provide a way for this component to be constructed

@@ -1,4 +1,4 @@
-package com.loc8r.seattleexplorer.ui.start
+package com.loc8r.seattleexplorer.presentation.start
 
 import android.arch.lifecycle.ViewModel
 
