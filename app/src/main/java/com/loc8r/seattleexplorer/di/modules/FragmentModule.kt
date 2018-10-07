@@ -4,7 +4,7 @@
 
 package com.loc8r.seattleexplorer.di.modules
 
-import com.loc8r.seattleexplorer.presentation.poi_detail.PoiDetailsFragment
+import com.loc8r.seattleexplorer.presentation.poi_list.PoiListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,5 +12,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentModule {
 
     @ContributesAndroidInjector
-    abstract fun contributesPoiDetailsFragment(): PoiDetailsFragment
+    abstract fun contributesPoiListFragment(): PoiListFragment
 }

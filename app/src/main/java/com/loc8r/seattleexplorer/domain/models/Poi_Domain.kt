@@ -14,5 +14,8 @@ class Poi_Domain(
         val release: Int,
         val stampText: String)
 {
+    init {
+
+    }
 
 }
