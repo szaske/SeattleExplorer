@@ -9,6 +9,6 @@ import javax.inject.Inject
 class DataRepository @Inject constructor(): ExplorerRepository {
 
     override fun getPois(): Observable<List<Poi_Domain>> {
-        return Observable.just(TestDataFactory.makePOIList(4))
+        return Observable.just(TestDataFactory.makePoiDomainList(4))
     }
 }

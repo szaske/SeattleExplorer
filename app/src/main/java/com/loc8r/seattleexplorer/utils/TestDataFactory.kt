@@ -1,6 +1,7 @@
 package com.loc8r.seattleexplorer.utils
 
 import com.loc8r.seattleexplorer.domain.models.Poi_Domain
+import com.loc8r.seattleexplorer.presentation.models.Poi_Presentation
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -35,11 +36,25 @@ object TestDataFactory {
                 randomString(), randomInt(), randomInt(), randomString())
     }
 
-    fun makePOIList(count: Int): List<Poi_Domain> {
-        val POIs = mutableListOf<Poi_Domain>()
+    fun makePoiDomainList(count: Int): List<Poi_Domain> {
+        val Pois = mutableListOf<Poi_Domain>()
         repeat(count){
-            POIs.add(makePoi_Domain())
+            Pois.add(makePoi_Domain())
         }
-        return POIs
+        return Pois
+    }
+
+    fun makePoi_Presentation(): Poi_Presentation {
+        return Poi_Presentation(randomString(),randomString(),randomString(),randomString(),
+                randomLatitude(), randomLongitude(), randomDouble(), randomDouble(),
+                randomString(), randomInt(), randomInt(), randomString())
+    }
+
+    fun makePoiPresentationList(count: Int): List<Poi_Presentation> {
+        val Pois = mutableListOf<Poi_Presentation>()
+        repeat(count){
+            Pois.add(makePoi_Presentation())
+        }
+        return Pois
     }
 }

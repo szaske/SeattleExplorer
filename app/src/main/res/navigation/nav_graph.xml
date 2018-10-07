@@ -5,16 +5,15 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/startFragment">
     <fragment
-        android:id="@+id/poiDetailsFragment"
-        android:name="com.loc8r.seattleexplorer.presentation.poi_detail.PoiDetailsFragment"
-        android:label="poi_details_fragment"
-        tools:layout="@layout/poi_details_fragment" />
+        android:id="@+id/poiListFragment"
+        android:name="com.loc8r.seattleexplorer.presentation.poi_list.PoiListFragment"
+        android:label="poi_list_fragment" />
     <fragment
         android:id="@+id/startFragment"
         android:name="com.loc8r.seattleexplorer.presentation.start.StartFragment"
         android:label="StartFragment" >
         <action
-            android:id="@+id/action_startFragment_to_poiDetailsFragment"
-            app:destination="@id/poiDetailsFragment" />
+            android:id="@+id/action_startFragment_to_poiListFragment"
+            app:destination="@id/poiListFragment" />
     </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package com.loc8r.seattleexplorer.presentation.poi_detail
+package com.loc8r.seattleexplorer.presentation.poi_list
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -14,7 +14,7 @@ import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import com.loc8r.seattleexplorer.presentation.models.Poi_Presentation
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.poi_details_fragment.*
+import kotlinx.android.synthetic.main.poi_list_fragment.*
 import javax.inject.Inject
 
 
@@ -28,11 +28,11 @@ private const val ARG_PARAM2 = "param2"
  * Activities that contain this fragment must implement the
  * [OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [PoiDetailsFragment.newInstance] factory method to
+ * Use the [PoiListFragment.newInstance] factory method to
  * create an instance of this fragment.
  *
  */
-class PoiDetailsFragment : Fragment() {
+class PoiListFragment : Fragment() {
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -41,7 +41,7 @@ class PoiDetailsFragment : Fragment() {
 
     // Here I'm injecting the viewModelFactory and NOT the viewModel
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var poiDetailViewModel: PoiDetailViewModel
+    private lateinit var poiListViewModel: PoiListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class PoiDetailsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.poi_details_fragment, container, false)
+        return inflater.inflate(R.layout.poi_list_fragment, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -85,12 +85,12 @@ class PoiDetailsFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment PoiDetailsFragment.
+         * @return A new instance of fragment PoiListFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                PoiDetailsFragment().apply {
+                PoiListFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
@@ -102,15 +102,15 @@ class PoiDetailsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // assigning the viewmodel according to the map in the viewModelFactory
-        poiDetailViewModel = ViewModelProviders.of(this,viewModelFactory).get(PoiDetailViewModel::class.java)
+        poiListViewModel = ViewModelProviders.of(this,viewModelFactory).get(PoiListViewModel::class.java)
 
         // This Requests from the Presentation layer the liveData stream which is nothing
-        poiDetailViewModel.getPois().observe(this,
+        poiListViewModel.getAllPois().observe(this,
                 Observer<List<Poi_Presentation>> {
 
                     // let is used to test against null
                     it?.let {
-                        poiDetailsFragment_txt.text = it[0].name
+                        poiListFragment_txt.text = it[0].name
                     }
                 })
     }

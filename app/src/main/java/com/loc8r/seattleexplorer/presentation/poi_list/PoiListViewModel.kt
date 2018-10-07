@@ -1,4 +1,4 @@
-package com.loc8r.seattleexplorer.presentation.poi_detail
+package com.loc8r.seattleexplorer.presentation.poi_list
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -11,7 +11,7 @@ import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
 import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
-open class PoiDetailViewModel @Inject constructor(
+open class PoiListViewModel @Inject constructor(
         private val getPois: GetPois,
         private val mapper: PoiMapper
 ) : ViewModel() {
@@ -20,15 +20,16 @@ open class PoiDetailViewModel @Inject constructor(
 
     // initializer block, see: https://kotlinlang.org/docs/reference/classes.html
     init {
-        onStartDataFetch()
+       fetchAllPois()
     }
 
-    fun getPois(): LiveData<List<Poi_Presentation>> {
+    fun getAllPois(): LiveData<List<Poi_Presentation>> {
         return poiData
     }
 
-    fun onStartDataFetch() {
-        // This initializes the useCase and creates the observer
+    fun fetchAllPois() {
+        // This initializes the useCase and creates the observer.
+        // Params are optional
         getPois.execute(PoiSubscriber())
     }
 
@@ -39,7 +40,7 @@ open class PoiDetailViewModel @Inject constructor(
     }
 
     // my solution for converting Observables to Livedata.
-    // I also considered ReactiveStreams support for LiveData, but wasn't sure that was the easier
+    // I also considered ReactiveStreams support for LiveData, but wasn't sure that was any easier
 
     inner class PoiSubscriber: DisposableObserver<List<Poi_Domain>>(){
         /**
@@ -75,7 +76,5 @@ open class PoiDetailViewModel @Inject constructor(
         override fun onError(e: Throwable) {
             Log.e("Obervable error: ", e.localizedMessage )
         }
-
     }
-
 }

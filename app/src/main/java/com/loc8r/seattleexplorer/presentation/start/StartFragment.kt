@@ -108,8 +108,8 @@ class StartFragment : Fragment() {
                 .build()
 
         // This navigates according to the id's within the nav_graph, not a view in a layout
-        goto_poiDetail_bt?.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.poiDetailsFragment, null, options)
+        goto_poiList_bt?.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.poiListFragment, null, options)
         }
 
     }

@@ -24,6 +24,9 @@ buildscript {
         junitVersion = '4.12'
         runnerVersion = '1.0.1'
         espressoVersion = '3.0.2'
+        archTestingVersion = '1.1.1'
+        mockitoKotlin2Version = '2.0.0-RC2'
+
     }
 
     repositories {
@@ -34,6 +37,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$buildToolsVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath 'org.jacoco:org.jacoco.core:0.8.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

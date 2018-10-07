@@ -2,5 +2,5 @@
     <string name="app_name">SeattleExplorer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="poi_details_fragment_text">Details Fragment</string>
+    <string name="poi_list_fragment_text">Poi List Fragment</string>
 </resources>
