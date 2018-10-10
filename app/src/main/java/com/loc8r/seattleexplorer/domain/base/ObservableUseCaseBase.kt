@@ -32,7 +32,7 @@ abstract class ObservableUseCaseBase<T, in Params> constructor(
     }
 
     // Method that adds a disposable to the set of disposables.
-    fun addDisposable(disposable: Disposable) {
+    private fun addDisposable(disposable: Disposable) {
         disposables.add(disposable)
     }
 

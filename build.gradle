@@ -9,6 +9,7 @@ buildscript {
         minSdkVersion = 21
         targetSdkVersion = 27
         buildToolsVersion = '3.2.0'
+        //buildToolsVersion = '3.3.0-alpha13'
 
         // App dependencies
         kotlinVersion = '1.2.71'
@@ -37,7 +38,6 @@ buildscript {
         classpath "com.android.tools.build:gradle:$buildToolsVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
-        classpath 'org.jacoco:org.jacoco.core:0.8.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -54,3 +54,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

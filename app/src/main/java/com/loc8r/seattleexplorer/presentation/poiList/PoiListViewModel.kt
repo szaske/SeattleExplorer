@@ -1,12 +1,12 @@
-package com.loc8r.seattleexplorer.presentation.poi_list
+package com.loc8r.seattleexplorer.presentation.poiList
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.loc8r.seattleexplorer.domain.GetPois
-import com.loc8r.seattleexplorer.domain.models.Poi_Domain
-import com.loc8r.seattleexplorer.presentation.models.Poi_Presentation
+import com.loc8r.seattleexplorer.domain.models.PoiDomain
+import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
 import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
@@ -16,18 +16,18 @@ open class PoiListViewModel @Inject constructor(
         private val mapper: PoiMapper
 ) : ViewModel() {
 
-    private val poiData: MutableLiveData<List<Poi_Presentation>> = MutableLiveData()
+    private val poiData: MutableLiveData<List<PoiPresentation>> = MutableLiveData()
 
     // initializer block, see: https://kotlinlang.org/docs/reference/classes.html
     init {
        fetchAllPois()
     }
 
-    fun getAllPois(): LiveData<List<Poi_Presentation>> {
+    fun getAllPois(): LiveData<List<PoiPresentation>> {
         return poiData
     }
 
-    fun fetchAllPois() {
+    private fun fetchAllPois() {
         // This initializes the useCase and creates the observer.
         // Params are optional
         getPois.execute(PoiSubscriber())
@@ -42,7 +42,7 @@ open class PoiListViewModel @Inject constructor(
     // my solution for converting Observables to Livedata.
     // I also considered ReactiveStreams support for LiveData, but wasn't sure that was any easier
 
-    inner class PoiSubscriber: DisposableObserver<List<Poi_Domain>>(){
+    inner class PoiSubscriber: DisposableObserver<List<PoiDomain>>(){
         /**
          * Notifies the Observer that the [Observable] has finished sending push-based notifications.
          * The [Observable] will not call this method if it calls [.onError].
@@ -59,7 +59,7 @@ open class PoiListViewModel @Inject constructor(
          *
          * @param data  the item emitted by the Observable
          */
-        override fun onNext(data: List<Poi_Domain>) {
+        override fun onNext(data: List<PoiDomain>) {
             poiData.postValue(data.map {
                 mapper.mapToPresentation(it)
             })

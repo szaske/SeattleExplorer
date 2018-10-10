@@ -1,4 +1,4 @@
-package com.loc8r.seattleexplorer.presentation.poi_list
+package com.loc8r.seattleexplorer.presentation.poiList
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.loc8r.seattleexplorer.R
 import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
-import com.loc8r.seattleexplorer.presentation.models.Poi_Presentation
+import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.poi_list_fragment.*
 import javax.inject.Inject
@@ -106,7 +106,7 @@ class PoiListFragment : Fragment() {
 
         // This Requests from the Presentation layer the liveData stream which is nothing
         poiListViewModel.getAllPois().observe(this,
-                Observer<List<Poi_Presentation>> {
+                Observer<List<PoiPresentation>> { it ->
 
                     // let is used to test against null
                     it?.let {

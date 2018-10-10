@@ -1,6 +1,6 @@
 package com.loc8r.seattleexplorer.domain.models
 
-class Poi_Domain(
+class PoiDomain(
         val id: String,
         val name: String,
         val description: String,
@@ -13,9 +13,3 @@ class Poi_Domain(
         val collectionPosition: Int,
         val release: Int,
         val stampText: String)
-{
-    init {
-
-    }
-
-}

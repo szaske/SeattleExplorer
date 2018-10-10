@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
 
     // This function enables the up arrow on the toolbar, along with the callback listener
     // onSupportNavigateUp
-    fun setupToolbar() {
+    private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
