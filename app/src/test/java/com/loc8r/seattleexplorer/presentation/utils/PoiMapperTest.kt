@@ -12,9 +12,13 @@ class PoiMapperTest {
 
     @Test
     fun mapToPresentationMapsDataCorrectly() {
-        val poiDomain = TestDataFactory.makePoi_Domain()
+        /* Given */
+        val poiDomain = TestDataFactory.makePoiDomain()
+
+        /* When */
         val poiPresentation = poiMapper.mapToPresentation(poiDomain)
 
+        /* Then */
         assertEquals(poiDomain.id, poiPresentation.id)
         assertEquals(poiDomain.name, poiPresentation.name)
         assertEquals(poiDomain.description, poiPresentation.description)

@@ -37,4 +37,5 @@ class SeattleExplorerApplication: Application(), HasActivityInjector, HasSupport
                 .inject(this)
 
     }
+
 }

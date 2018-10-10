@@ -1,6 +1,6 @@
-package com.loc8r.seattleexplorer.presentation.models
+package com.loc8r.seattleexplorer.repository.models
 
-class Poi_Presentation(
+class PoiRepository(
         val id: String,
         val name: String,
         val description: String,
@@ -13,6 +13,3 @@ class Poi_Presentation(
         val collectionPosition: Int,
         val release: Int,
         val stampText: String)
-{
-
-}

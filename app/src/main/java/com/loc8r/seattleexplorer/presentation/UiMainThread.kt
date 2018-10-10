@@ -13,7 +13,7 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class uiMainThread @Inject constructor(): ObservingThread {
+class UiMainThread @Inject constructor(): ObservingThread {
     override val scheduler: Scheduler
         get() = AndroidSchedulers.mainThread()
 }
