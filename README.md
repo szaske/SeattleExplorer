@@ -5,7 +5,7 @@ This repo represents my attempt to create a proper Android app. By proper I mean
 3. Use Google's Jetpack components Navigation and Fragments for UI
 4. Use Room for local storage
 5. Use Dagger2 for dependency injection.
-6. Use Google Firebase as my online storage.
+6. Use Google Firebase/Firestore as my online storage.
 
 The app I'm creating is called Seattle Explorer. It will list interesting locations around the city of Seattle.
 
@@ -77,4 +77,5 @@ Great work so far.  I now have a working Android app using the MVVM design patte
   * I added interfaces for Cache and Remote modules I'll be creating in the future.  
   * I created Remote and Cache broker classes.  Hopefully broker is the correct name to use here.  These classes are used to communicate with the Cache and Remote modules.  I'll admit I have some concern that I may be over designing this app, but what the heck. I'll deal with that problem when it comes.
   * I wrote unit tests for the DataRepository and Poi_RepoMapper classes.
-  
+
+**STEP #11. Building the Firebase Remote Module.** I created a Remote package and a FirestoreManager class.  This class implements the ExplorerRemote interface, which at this point is only one method "getPois".  This step obviously required that I have a Firebase project and data stored in Firestore that I can pull down.  You can read their documentation to figure out how to add Firebase to your project and what dependencies were needed.  It's pretty straight forward.  I originally tried to use Francisco Sierra's RxFirebase library, but did not have luck getting it to work, so instead I went with a more standard approach.  And like other layers, I've created yet another Poi model, this one called FireStorePoiResponse, but in this case I've added the mapper class functionality right into the model class.  I'm not sure which mapper approach I like more.
