@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Required for wierd Firebase lint error. See: https://stackoverflow.com/questions/50159255/firestore-invalid-package-reference-in-library-->
+<lint>
+    <issue id="InvalidPackage">
+        <ignore path="*/io.grpc/grpc-core/*"/>
+    </issue>
+</lint>
