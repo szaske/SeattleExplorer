@@ -20,6 +20,10 @@ buildscript {
         daggerVersion = '2.17'
         rxJavaVersion = '2.3.0'
         rxAndroidVersion = '2.1.0'
+        firestoreVersion = '17.1.1'
+        firebaseCoreVersion = '16.0.4'
+        googleServicesVersion = '4.1.0'
+        kotlinReflectVersion = '1.2.71'
 
         // Testing
         junitVersion = '4.12'
@@ -34,11 +38,12 @@ buildscript {
         google()
         jcenter()
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:$buildToolsVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
-
+        classpath "com.google.gms:google-services:$googleServicesVersion"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -48,6 +53,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
