@@ -21,7 +21,8 @@ import javax.inject.Inject
 
 
 class FireStoreManager @Inject constructor(
-        private val database: FirebaseFirestore
+        private val database: FirebaseFirestore,
+        private val listener: FirestoreDataListener
 ): ExplorerRemote {
 
     companion object {
@@ -36,35 +37,7 @@ class FireStoreManager @Inject constructor(
             // Start by creating the Observable producer, that being Firestore event Listener.
             // So we create a variable to act as our Observable producer
             val observableProducer = database.collection(KEY_POIS)
-                    .addSnapshotListener(EventListener<QuerySnapshot> { querySnapshot, e ->
-
-                        // This is the Lambda expression used as the response to a Firestore snapshot
-
-                        // Check to see if an error occurred.
-                        if (e != null) {
-                            Log.w(TAG, " Listener failed with error: ", e)
-                            emitter.onError(e)
-                            return@EventListener
-                        }
-
-                        // Check to see if we have content in the querySnapshot
-                        if (!querySnapshot!!.isEmpty) {
-
-                            // We need some code to convert the querySnapshot into a list of Pois
-                            val results = mutableListOf<PoiRepository>()
-
-                            for (document in querySnapshot.documents) {
-                                val sentPOI = document.toObject(FireStorePoiResponse::class.java)
-                                results.add(sentPOI!!.mapToRepository())
-                            }
-
-                            // Now we pass the results to the observable stream
-                            emitter.onNext(results)
-                        } else {
-                            Log.d(TAG, " QuerySnapshot is empty")
-
-                        }
-                    })
+                    .addSnapshotListener(listener(emitter))
             emitter.setCancellable { observableProducer.remove() }
         }
     }
