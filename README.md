@@ -79,3 +79,5 @@ Great work so far.  I now have a working Android app using the MVVM design patte
   * I wrote unit tests for the DataRepository and Poi_RepoMapper classes.
 
 **STEP #11. Building the Firebase Remote Module.** I created a Remote package and a FirestoreManager class.  This class implements the ExplorerRemote interface, which at this point is only one method "getPois".  This step obviously required that I have a Firebase project and data stored in Firestore that I can pull down.  You can read their documentation to figure out how to add Firebase to your project and what dependencies were needed.  It's pretty straight forward.  I originally tried to use Francisco Sierra's RxFirebase library, but did not have luck getting it to work, so instead I went with a more standard approach.  And like other layers, I've created yet another Poi model, this one called FireStorePoiResponse, but in this case I've added the mapper class functionality right into the model class.  I'm not sure which mapper approach I like more.
+
+**STEP #12. Continuous Integration with CircleCI.** 
