@@ -1,4 +1,18 @@
 version: 2
+
+references:
+
+# Google Services
+
+  export_gservices_json: &export_gservices_json
+    run:
+      name: Export Google Services JSON environment variable
+      command: echo 'export GOOGLE_SERVICES="$GOOGLE_SERVICES"' >> $BASH_ENV
+  decode_gservices_json: &decode_gservices_json
+    run:
+      name: Decode Google Services JSON
+      command: echo $GOOGLE_SERVICES | base64 -di > app/google-services.json
+
 jobs:
   build:
     working_directory: ~/code
@@ -20,6 +34,8 @@ jobs:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - *export_gservices_json
+      - *decode_gservices_json
       - run:
           name: Run Tests
           command: ./gradlew lint test
