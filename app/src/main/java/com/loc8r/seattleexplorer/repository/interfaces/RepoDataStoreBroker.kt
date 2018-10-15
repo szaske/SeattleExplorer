@@ -7,11 +7,11 @@ package com.loc8r.seattleexplorer.repository.interfaces
 
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
 
 interface RepoDataStoreBroker {
 
-    fun getPois(): Observable<List<PoiRepository>>
+    fun getPois(): Single<List<PoiRepository>>
 
     fun savePois(pois: List<PoiRepository>): Completable
 

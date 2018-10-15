@@ -6,39 +6,42 @@
 
 package com.loc8r.seattleexplorer.remote
 
-import android.util.Log
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.loc8r.seattleexplorer.remote.models.FireStorePoiResponse
 import com.loc8r.seattleexplorer.repository.interfaces.ExplorerRemote
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
+import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import javax.inject.Inject
 
-
-
-
 class FireStoreManager @Inject constructor(
-        private val database: FirebaseFirestore,
-        private val listener: FirestoreDataListener
+        private val database: FirebaseFirestore
 ): ExplorerRemote {
 
     companion object {
         private const val KEY_POIS = "pois"
-        private val TAG = FireStoreManager::class.qualifiedName
+        private const val POIS_ORDER = "name"
     }
 
-    override fun getPois(): Observable<List<PoiRepository>> {
+    override fun getPois(): Single<List<PoiRepository>> {
 
-        return Observable.create { emitter: ObservableEmitter<List<PoiRepository>> ->
-
-            // Start by creating the Observable producer, that being Firestore event Listener.
-            // So we create a variable to act as our Observable producer
-            val observableProducer = database.collection(KEY_POIS)
-                    .addSnapshotListener(listener(emitter))
-            emitter.setCancellable { observableProducer.remove() }
+        return Single.create {
+            emitter: SingleEmitter<List<PoiRepository>> ->
+            database.collection(KEY_POIS).orderBy(POIS_ORDER).get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        if (task.result!!.isEmpty) {
+                            emitter.onError(IllegalStateException("Empty Poi List returned, Singles cannot be empty"))
+                        } else {
+                            emitter.onSuccess(task.result!!.toObjects(FireStorePoiResponse::class.java)
+                                    .map { it -> it.mapToRepository() })
+                        }
+                    } else {
+                        // An error occurred lets pass it to the Observable
+                        emitter.onError(task.exception ?: UnknownError())
+                    }
+                }
         }
+
     }
 }

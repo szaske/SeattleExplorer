@@ -46,7 +46,7 @@ class DataRepositoryTest {
 
     private fun stubGetPois(poi_RepoList: List<PoiRepository>) {
         whenever(mockRemoteDataStoreBroker.getPois())
-                .thenReturn(Observable.just(poi_RepoList))
+                .thenReturn(Single.just(poi_RepoList))
     }
 
     /**

@@ -53,6 +53,11 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore:$firestoreVersion"
     implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinReflectVersion"
+    implementation "com.github.FrangSierra:RxFirebase:$rxFirebaseVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
+
 
     // Testing
     testImplementation "junit:junit:$junitVersion"
