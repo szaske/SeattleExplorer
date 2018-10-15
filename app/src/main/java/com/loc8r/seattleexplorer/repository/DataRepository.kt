@@ -4,6 +4,7 @@ import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.repository.interfaces.RepoDataStoreBroker
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
@@ -12,7 +13,7 @@ open class DataRepository @Inject constructor(
         private val remoteBroker: RemoteDataStoreBroker,
         private val mapper: PoiRepoMapper): DomainRepository{
 
-    override fun getPois(): Observable<List<PoiDomain>> {
+    override fun getPois(): Single<List<PoiDomain>> {
 
         /** Because we're going to be getting pois data from our data store,
          *  we first need to get some information about the cacheBroker.  The ZIP method
@@ -32,29 +33,29 @@ open class DataRepository @Inject constructor(
          * method from the given store...which returns
          * an Observable list of Pois.  Then we flatMap that give us the ability to
          * save the Pois to the cacheBroker.  We cast andThen to convert the results back into
-         * an observable.
+         * an observable. Finally we convert the List to a Domain_Poi model type using a map method.
          *
          **/
         val pois = cacheStatus.flatMap {
             getDataStore(it.first,it.second)
-                    .getPois()
-                    .distinctUntilChanged()
+                    .getPois().toObservable()
+
         }
         .flatMap { pois ->
             // this saves the data to the cacheBroker each time
             cacheBroker.savePois(pois)
                 .andThen(Observable.just(pois))}
-
-        /**
-         * Finally we convert the List to a Domain_Poi model type using a map method.
-         */
-        return pois
-            .map { eachList ->
-                eachList.map {
-                    // converting each poi
-                    mapper.mapToDomain(it)
+                .map { eachList ->
+                    eachList.map {
+                        // converting each poi
+                        mapper.mapToDomain(it)
+                    }
                 }
-            }
+
+
+        // return a Single
+        return Single.fromObservable(pois)
+
     }
 
     /**

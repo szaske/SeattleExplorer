@@ -23,6 +23,7 @@ buildscript {
         firestoreVersion = '17.1.1'
         firebaseCoreVersion = '16.0.4'
         googleServicesVersion = '4.1.0'
+        rxFirebaseVersion = '1.5.2'
         kotlinReflectVersion = '1.2.71'
 
         // Testing
@@ -31,6 +32,7 @@ buildscript {
         espressoVersion = '3.0.2'
         archTestingVersion = '1.1.1'
         mockitoKotlin2Version = '2.0.0-RC2'
+        leakCanaryVersion = '1.6.1'
 
     }
 
@@ -40,7 +42,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$buildToolsVersion"
+        classpath "com.android.tools.build:gradle:3.2.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"

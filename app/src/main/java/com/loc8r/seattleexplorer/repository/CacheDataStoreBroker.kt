@@ -4,7 +4,6 @@ import com.loc8r.seattleexplorer.repository.interfaces.RepoDataStoreBroker
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -14,9 +13,9 @@ open class CacheDataStoreBroker @Inject constructor(): RepoDataStoreBroker {
         return Completable.complete()
     }
 
-    override fun getPois(): Observable<List<PoiRepository>> {
+    override fun getPois(): Single<List<PoiRepository>> {
         // temporary code to supply some fake data
-        return Observable.just(TestDataFactory.makePoiRepoList(4))
+        return Single.just(TestDataFactory.makePoiRepoList(4))
     }
 
     open fun arePoisCached(): Single<Boolean> {

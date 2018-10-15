@@ -8,7 +8,7 @@ import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
-import io.reactivex.observers.DisposableObserver
+import io.reactivex.observers.DisposableSingleObserver
 import javax.inject.Inject
 
 open class PoiListViewModel @Inject constructor(
@@ -39,29 +39,23 @@ open class PoiListViewModel @Inject constructor(
         super.onCleared()
     }
 
-    // my solution for converting Observables to Livedata.
+    // my solution for converting a Single to Livedata.
     // I also considered ReactiveStreams support for LiveData, but wasn't sure that was any easier
 
-    inner class PoiSubscriber: DisposableObserver<List<PoiDomain>>(){
+    inner class PoiSubscriber: DisposableSingleObserver<List<PoiDomain>>(){
         /**
-         * Notifies the Observer that the [Observable] has finished sending push-based notifications.
-         * The [Observable] will not call this method if it calls [.onError].
-         */
-        override fun onComplete() {
-            Log.i("poiSubscriber: ", "completed")
-        }
-
-        /**
-         * Provides the Observer with a new List of Poi to observe. The [Observable] may call this
-         * method 0 or more times. The `Observable` will not call this method again after it calls
-         * either [.onComplete] or [.onError].  It also maps the results to a Presentation layer
-         * Poi model type
+         * Notifies the SingleObserver with a single item and that the [Single] has finished sending
+         * push-based notifications.
          *
-         * @param data  the item emitted by the Observable
+         *
+         * The [Single] will not call this method if it calls [.onError].
+         *
+         * @param t
+         * the item emitted by the Single
          */
-        override fun onNext(data: List<PoiDomain>) {
+        override fun onSuccess(data: List<PoiDomain>) {
             poiData.postValue(data.map {
-                mapper.mapToPresentation(it)
+                                mapper.mapToPresentation(it)
             })
         }
 
