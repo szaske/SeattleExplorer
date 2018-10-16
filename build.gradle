@@ -23,8 +23,8 @@ buildscript {
         firestoreVersion = '17.1.1'
         firebaseCoreVersion = '16.0.4'
         googleServicesVersion = '4.1.0'
-        rxFirebaseVersion = '1.5.2'
         kotlinReflectVersion = '1.2.71'
+        picassoVersion = '2.71828'
 
         // Testing
         junitVersion = '4.12'
@@ -33,7 +33,6 @@ buildscript {
         archTestingVersion = '1.1.1'
         mockitoKotlin2Version = '2.0.0-RC2'
         leakCanaryVersion = '1.6.1'
-
     }
 
     repositories {

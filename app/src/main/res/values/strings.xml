@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">SeattleExplorer</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="poi_list_fragment_text">Poi List Fragment</string>
+    <!-- Start Fragment Strings -->
+    <string name="start_fragment_title">Start Fragment</string>
+    <string name="to_poi_list_button_text">to POI List</string>
+
+    <!-- PoiList RecyclerView Strings -->
+    <string name="poi_name_design_placeholder">Poi Name Here</string>
+    <string name="poi_collection_design_placeholder">Collection Name</string>
+    <string name="contentDesc_img">Point of Interest image</string>
+
 </resources>
