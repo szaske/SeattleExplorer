@@ -30,11 +30,14 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation "com.android.support:exifinterface:$supportLibraryVersion" //Added to eliminate gradle version errors
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.navigation:navigation-fragment:$navigationVersion"
     implementation "android.arch.navigation:navigation-ui:$navigationVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
 
     //DI
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -48,16 +51,13 @@ dependencies {
 
     //Presentation
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
 
     //Remote
     implementation "com.google.firebase:firebase-firestore:$firestoreVersion"
     implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinReflectVersion"
-    implementation "com.github.FrangSierra:RxFirebase:$rxFirebaseVersion"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
-
 
     // Testing
     testImplementation "junit:junit:$junitVersion"
@@ -65,8 +65,6 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin2Version"
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
-
-
 }
 
 apply plugin: 'com.google.gms.google-services'

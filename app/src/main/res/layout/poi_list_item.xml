@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/img_poi_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/contentDesc_img" />
+
+    <TextView
+        android:id="@+id/txt_poi_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text=""
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/img_poi_img"
+        app:layout_constraintTop_toTopOf="@+id/img_poi_img"
+        tools:text="@string/poi_name_design_placeholder" />
+
+    <TextView
+        android:id="@+id/txt_poi_collection_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text=""
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/txt_poi_name"
+        app:layout_constraintTop_toBottomOf="@+id/txt_poi_name"
+        tools:text="@string/poi_collection_design_placeholder" />
+
+</android.support.constraint.ConstraintLayout>

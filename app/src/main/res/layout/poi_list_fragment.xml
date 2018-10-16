@@ -3,10 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/poiListFragment_txt"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_poisList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/poi_list_fragment_text" />
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:scrollbars="vertical" />
 
 </FrameLayout>
