@@ -32,9 +32,9 @@ class SeattleExplorerApplication: Application(), HasActivityInjector, HasSupport
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
-            return;
+            return
         }
-        LeakCanary.install(this);
+        LeakCanary.install(this)
 
         // application() binds these components to the Application and return our builder
         // This class will appear unresolved until you build your project with all the

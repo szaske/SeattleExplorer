@@ -6,9 +6,13 @@ import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
+import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.*
-import junit.framework.Assert.assertEquals
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.schedulers.Schedulers
+import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,10 +29,20 @@ class PoiListViewModelTest {
     //Mock objects needed to instantiate the class under test
     private val mockGetPois = mock<GetPois>()
     private val mockMapper = mock<PoiMapper>()
-    private val mockObserver = mock<Observer<List<PoiPresentation>>>()
+    private val mockObserver = mock<Observer<Resource<List<PoiPresentation>>>>()
 
     // Class being tested
-    private val poiListViewModel = PoiListViewModel(mockGetPois,mockMapper)
+    private lateinit var poiListViewModel: PoiListViewModel
+
+    @Before
+    fun setup() {
+        // Configures RxJava to use the Trampoline scheduler, allowing us to unit test RxJava code
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler {
+            _ -> Schedulers.trampoline()
+        }
+        poiListViewModel = PoiListViewModel(mockGetPois,mockMapper)
+    }
+
 
     private fun stubMapper(poi_Domain: PoiDomain, poiPresentation: PoiPresentation) {
         whenever(mockMapper.mapToPresentation(poi_Domain)).thenReturn(poiPresentation)
@@ -55,6 +69,6 @@ class PoiListViewModelTest {
 
         /* Then */   // Check live data
         val results = poiListViewModel.getAllPois().value
-        assertEquals(results?.get(0)?.name,poiPresentation.name)
+        assertEquals(results?.data?.get(0)?.name,poiPresentation.name)
     }
 }

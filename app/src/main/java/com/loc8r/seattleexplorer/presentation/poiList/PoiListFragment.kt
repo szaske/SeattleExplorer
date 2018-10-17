@@ -21,11 +21,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.loc8r.seattleexplorer.R
 import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
+import com.loc8r.seattleexplorer.presentation.utils.Resource
+import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.poi_list_fragment.*
 import javax.inject.Inject
 
 
@@ -59,6 +63,25 @@ class PoiListFragment : Fragment() {
     @Inject lateinit var poiListAdapter: PoiListAdapter
     private var mLayoutManager: RecyclerView.LayoutManager? = null
 
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment PoiListFragment.
+         */
+        // TODO: Rename and change types and number of parameters
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+                PoiListFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                        putString(ARG_PARAM2, param2)
+                    }
+                }
+    }
 
     override fun onAttach(context: Context) {
         // Here's I'm kicking off the injection process for the Fragment
@@ -108,39 +131,43 @@ class PoiListFragment : Fragment() {
 
         // This Requests from the Presentation layer the liveData stream which is nothing
         poiListViewModel.getAllPois().observe(this,
-                Observer<List<PoiPresentation>> { it ->
-
+                Observer<Resource<List<PoiPresentation>>> { it ->
                     // let is used to test against null
                     it?.let {
-                        poiListAdapter.pois = it
-                        poiListAdapter.notifyDataSetChanged()
+                        handleData(it)
                     }
                 })
     }
-
 
     override fun onDetach() {
         super.onDetach()
         listener = null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PoiListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                PoiListFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    // A function for showing or hiding the progress circle
+    private fun handleData(resource: Resource<List<PoiPresentation>>) {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                onResourceSuccess(resource.data)
+            }
+            ResourceState.LOADING -> {
+                // While loading make progress view visible
+                progress.visibility = View.VISIBLE
+                recycler_poisList.visibility = View.GONE
+            }
+            ResourceState.ERROR -> {
+                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
-}
+
+    private fun onResourceSuccess(projects: List<PoiPresentation>?) {
+        progress.visibility = View.GONE
+        projects?.let {
+            poiListAdapter.pois = it
+            poiListAdapter.notifyDataSetChanged()
+            recycler_poisList.visibility = View.VISIBLE
+        }
+    }
+
+} // class end
