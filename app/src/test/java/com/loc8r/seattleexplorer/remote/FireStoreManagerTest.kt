@@ -2,14 +2,11 @@ package com.loc8r.seattleexplorer.remote
 
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.*
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,11 +49,11 @@ class FireStoreManagerTest {
         whenever(mockQuerySnapshot.toObjects(PoiRepository::class.java)).thenReturn(poiList)
     }
 
-    fun stubQuerySnapshotIsEmpty(boolean: Boolean){
+    private fun stubQuerySnapshotIsEmpty(boolean: Boolean){
         whenever(mockQuerySnapshot.isEmpty).thenReturn(boolean)
     }
 
-    fun stubQueryTaskIsSuccessful(boolean: Boolean){
+    private fun stubQueryTaskIsSuccessful(boolean: Boolean){
         whenever(mockQuerySnapshotTask.isSuccessful).thenReturn(boolean)
     }
 

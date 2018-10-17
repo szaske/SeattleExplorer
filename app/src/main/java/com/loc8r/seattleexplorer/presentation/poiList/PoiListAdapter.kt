@@ -90,15 +90,8 @@ class PoiListAdapter @Inject constructor(): RecyclerView.Adapter<PoiListAdapter.
 
     // Having a ViewHolder inner class is a standard design pattern.
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        var poiImage: ImageView
-        var poiNameText: TextView
-        var poiCollectionText: TextView
-
-        init {
-            poiImage = view.findViewById(R.id.img_poi_img)
-            poiNameText = view.findViewById(R.id.txt_poi_name)
-            poiCollectionText = view.findViewById(R.id.txt_poi_collection_name)
-        }
-
+        var poiImage: ImageView = view.findViewById(R.id.img_poi_img)
+        var poiNameText: TextView = view.findViewById(R.id.txt_poi_name)
+        var poiCollectionText: TextView = view.findViewById(R.id.txt_poi_collection_name)
     }
 }

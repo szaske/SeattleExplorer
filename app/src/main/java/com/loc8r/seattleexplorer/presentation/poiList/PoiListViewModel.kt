@@ -1,3 +1,13 @@
+/**
+ * The Viewmodel connects the Domain to the view.  Some of the items currently handled by this viewmodel
+ *
+ * 1. Acts as the subscriber to the PoiData RxJava Single
+ * 2. Converts the Single to LiveData
+ * 3. Hosts the poiData LiveData stream, making it available to our fragment partner
+ * 3. Converts (via Mapper) Domain models to Presentation models
+ *
+ */
+
 package com.loc8r.seattleexplorer.presentation.poiList
 
 import android.arch.lifecycle.LiveData
@@ -8,6 +18,8 @@ import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
+import com.loc8r.seattleexplorer.presentation.utils.Resource
+import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import io.reactivex.observers.DisposableSingleObserver
 import javax.inject.Inject
 
@@ -16,24 +28,27 @@ open class PoiListViewModel @Inject constructor(
         private val mapper: PoiMapper
 ) : ViewModel() {
 
-    private val poiData: MutableLiveData<List<PoiPresentation>> = MutableLiveData()
+    private val poiData: MutableLiveData<Resource<List<PoiPresentation>>> = MutableLiveData()
 
     // initializer block, see: https://kotlinlang.org/docs/reference/classes.html
     init {
        fetchAllPois()
     }
 
-    fun getAllPois(): LiveData<List<PoiPresentation>> {
+    fun getAllPois(): LiveData<Resource<List<PoiPresentation>>> {
         return poiData
     }
 
     private fun fetchAllPois() {
-        // This initializes the useCase and creates the observer.
+        // This sets the default state of the screen
+        poiData.postValue(Resource(ResourceState.LOADING,null,null))
+
+        // This initializes the useCase which subscribes to the PoiList Single.
         // Params are optional
         getPois.execute(PoiSubscriber())
     }
 
-    // this disposes of the observable subscriptions as needed when the view is destroyed
+    // this disposes of the single subscription as needed when the view is destroyed
     override fun onCleared() {
         getPois.dispose()
         super.onCleared()
@@ -54,9 +69,11 @@ open class PoiListViewModel @Inject constructor(
          * the item emitted by the Single
          */
         override fun onSuccess(data: List<PoiDomain>) {
-            poiData.postValue(data.map {
+            poiData.postValue(
+                    Resource(ResourceState.SUCCESS,
+                            data.map {
                                 mapper.mapToPresentation(it)
-            })
+                            },null))
         }
 
         /**
@@ -68,6 +85,7 @@ open class PoiListViewModel @Inject constructor(
          * the exception encountered by the Observable
          */
         override fun onError(e: Throwable) {
+            poiData.postValue(Resource(ResourceState.ERROR,null,e.localizedMessage))
             Log.e("Obervable error: ", e.localizedMessage )
         }
     }
