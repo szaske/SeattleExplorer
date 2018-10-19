@@ -65,7 +65,7 @@ class PoiListViewModelTest {
         poiListViewModel.getAllPois().observeForever(mockObserver)
 
         /* When */   // insert item into RxJava Observable
-        poiListViewModel.PoiSubscriber().onSuccess(listOf(poiDomain))
+        poiListViewModel.PoiSubscriber().onNext(listOf(poiDomain))
 
         /* Then */   // Check live data
         val results = poiListViewModel.getAllPois().value

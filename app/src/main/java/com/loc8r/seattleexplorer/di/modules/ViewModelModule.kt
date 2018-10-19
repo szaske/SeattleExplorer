@@ -16,9 +16,6 @@ import kotlin.reflect.KClass
 internal abstract class ViewModelModule {
 
     @Binds
-    abstract fun bindPostExecutionThread(uiMainThread: UiMainThread): ObservingThread
-
-    @Binds
     @IntoMap
     @ViewModelKey(PoiListViewModel::class)
     abstract fun bindPoiDetailViewModel(viewModel: PoiListViewModel): ViewModel

@@ -89,3 +89,21 @@ Great work so far.  I now have a working Android app using the MVVM design patte
 **STEP #14. RecyclerView and Adapter.** This was a fairly simple task, one most Android developers would have done many times before since RecyclerViews are probably the most used Android view. So I wont add much commentary here.
 
 **STEP #15. Resource wrapper class in Presentation layer.** Now that I'm pulling down a large list of data from Firestore and loading it into a RecyclerView there's a noticeable lag in the UI while this is happening.  The RecyclerView sits empty for ~2 seconds while I pull down the data in the background.  The fix for this is to have the viewModel/fragment keep track of the status of the poiList Single call.  If the UI can determine the status of the data download it can show a progress bar and let users know that it's waiting for data.  To accomplish this I'll create a Resource wrapper class that will include my original data (A list of POI) as well as a status (a ResourceState enum) and a message, in the case that an error message needs to be sent.  This means I needed to change the poiData LiveData from a List of POI to a Resource that wraps that list.  The Resource states are Loading, Success and Error.  I've written code in the fragment to show the progress bar when the livedata Resource is in the LOADING state.  I also needed to refactor the unit tests to make them aware of this new LiveData class.
+
+**STEP #16. Adding a local Cache Data Store.** Now it's time to a local cache data store option. This will help the app function more smoothly and save me some bandwidth expenses. Since I'm attempting to follow Google's Android recommendations, I'm going to use Room as my database ORM. You can learn more about it [here](https://medium.com/androiddevelopers/room-rxjava-acb0cd4f3757). The basic logic is this; The Data Repository class will first check to see if I have the data cached locally and what the age of that cache is.  That means I need 2 tables of data. One table to store my POIs data and another simpler one to store the date of my last save to the POIs table. Here is what the poi table looks like:
+![poi_table](https://i.imgur.com/MIT4Pg0.png)
+
+And here is the table where I store the lastCacheTime:
+![lastCacheTime](https://i.imgur.com/caR5Izm.png)
+
+Here are the steps involved to get my local cache up and running:
+* I created 2 new models one for each table I needed; the POIs (PoiCache) and the CacheStatus.  These models need to have the @Entity annotation to work with Room.
+* I created 2 Constant classes to store my SQL query strings; one for each table.
+* I created 2 Dao classes for each table.
+* I created the Implementation class, which implemented the ExplorerCache interface.
+* I created the Database class ExplorerDatabase
+* I wrote mapper classes to map POIs between the Cache and the Repository
+* I had to refactor my existing DataRepository class to choose between the two data sources
+* I wrote unit tests to test the logic of these classes.
+
+I ran into a few problems trying to find a method to check for the existence of data in the POIs table.  I originally was going to call the getPois function and then call the IsEmpty method on those results. Unfortunately this wouldn't work. I was returning a Single with the getPois call and Single do not allow for returning a null/empty response. I ended up creating a CASE SQL query that solved my problem. I also ran into errors with ROOM's "Cannot access the database on the main thread" error.  This required that I inspect each Observable I was creating and making sure to use RxJava's SubscribeOn and ObserveOn functions.

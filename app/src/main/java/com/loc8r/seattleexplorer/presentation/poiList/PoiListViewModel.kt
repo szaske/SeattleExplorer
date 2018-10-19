@@ -20,7 +20,7 @@ import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
 import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.presentation.utils.ResourceState
-import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
 open class PoiListViewModel @Inject constructor(
@@ -57,23 +57,29 @@ open class PoiListViewModel @Inject constructor(
     // my solution for converting a Single to Livedata.
     // I also considered ReactiveStreams support for LiveData, but wasn't sure that was any easier
 
-    inner class PoiSubscriber: DisposableSingleObserver<List<PoiDomain>>(){
+    inner class PoiSubscriber: DisposableObserver<List<PoiDomain>>(){
         /**
-         * Notifies the SingleObserver with a single item and that the [Single] has finished sending
-         * push-based notifications.
-         *
-         *
-         * The [Single] will not call this method if it calls [.onError].
-         *
-         * @param t
-         * the item emitted by the Single
+         * Notifies the Observer that the [Observable] has finished sending push-based notifications.
+         * The [Observable] will not call this method if it calls [.onError].
          */
-        override fun onSuccess(data: List<PoiDomain>) {
+        override fun onComplete() {
+            Log.i("poiSubscriber: ", "completed")
+        }
+
+        /**
+         * Provides the Observer with a new List of Poi to observe. The [Observable] may call this
+         * method 0 or more times. The `Observable` will not call this method again after it calls
+         * either [.onComplete] or [.onError].  It also maps the results to a Presentation layer
+         * Poi model type
+         *
+         * @param data  the item emitted by the Observable
+         */
+        override fun onNext(data: List<PoiDomain>) {
             poiData.postValue(
                     Resource(ResourceState.SUCCESS,
-                            data.map {
-                                mapper.mapToPresentation(it)
-                            },null))
+                    data.map {
+                        mapper.mapToPresentation(it)
+            },null))
         }
 
         /**
@@ -86,7 +92,7 @@ open class PoiListViewModel @Inject constructor(
          */
         override fun onError(e: Throwable) {
             poiData.postValue(Resource(ResourceState.ERROR,null,e.localizedMessage))
-            Log.e("Obervable error: ", e.localizedMessage )
+            Log.e("Observable error", e.localizedMessage )
         }
     }
 }

@@ -2,9 +2,7 @@ package com.loc8r.seattleexplorer.repository
 
 import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
-import com.loc8r.seattleexplorer.repository.interfaces.RepoDataStoreBroker
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
@@ -13,7 +11,7 @@ open class DataRepository @Inject constructor(
         private val remoteBroker: RemoteDataStoreBroker,
         private val mapper: PoiRepoMapper): DomainRepository{
 
-    override fun getPois(): Single<List<PoiDomain>> {
+    override fun getPois(): Observable<List<PoiDomain>> {
 
         /** Because we're going to be getting pois data from our data store,
          *  we first need to get some information about the cacheBroker.  The ZIP method
@@ -37,37 +35,29 @@ open class DataRepository @Inject constructor(
          *
          **/
         val pois = cacheStatus.flatMap {
-            getDataStore(it.first,it.second)
-                    .getPois().toObservable()
 
+            // val datastore = getDataStore(it.first,it.second)
+
+            if (it.first && !it.second) {
+                // Cache is fresh and the appropriate data source
+                // Cache returns a Maybe and is here converted to an Observable
+                cacheBroker.getPois().toObservable()
+            } else {
+                // Cache is old, let's get data from the remote source
+                // RemoteBroker returns a Single, so we convert to Observable
+                remoteBroker.getPois().toObservable()
+                        .flatMap { pois ->
+                            // this saves the data to the cacheBroker each time
+                            cacheBroker.savePois(pois)
+                                .andThen(Observable.just(pois))}
+            }
         }
-        .flatMap { pois ->
-            // this saves the data to the cacheBroker each time
-            cacheBroker.savePois(pois)
-                .andThen(Observable.just(pois))}
-                .map { eachList ->
-                    eachList.map {
-                        // converting each poi
-                        mapper.mapToDomain(it)
-                    }
-                }
-
-
-        // return a Single
-        return Single.fromObservable(pois)
-
-    }
-
-    /**
-     * Returns the proper data store depending on the status of the cacheBroker
-     */
-    open fun getDataStore(poisCached: Boolean,
-                          cacheExpired: Boolean): RepoDataStoreBroker {
-        return if (poisCached && !cacheExpired) {
-            cacheBroker
-        } else {
-            remoteBroker
+        .map { eachList ->
+            eachList.map {
+                // converting each POI to Domain model
+                mapper.mapToDomain(it)
+            }
         }
+        return pois
     }
-
 }
