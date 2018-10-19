@@ -17,7 +17,7 @@ import org.mockito.Mockito.RETURNS_DEEP_STUBS
 
 
 @RunWith(JUnit4::class)
-class FireStoreManagerTest {
+class ExplorerRemoteImplTest {
 
     // Mocks
     private val mockDatabase = mock<FirebaseFirestore>(
@@ -26,12 +26,19 @@ class FireStoreManagerTest {
     private val mockQuerySnapshot = mock<QuerySnapshot>()
     private val mockQuerySnapshotTask = mock<Task<QuerySnapshot>>()
 
-    private val firestoreManager = FireStoreManager(mockDatabase)
+    // Class under test
+    private lateinit var explorerRemoteImpl: ExplorerRemoteImpl
+
+    // Others
     private val poiList = listOf(TestDataFactory.makePoiRepo(),TestDataFactory.makePoiRepo())
 
     @Before
     fun setup(){
-        // Step #1 return the query Task on get()
+        //create instance of class under test
+        explorerRemoteImpl = ExplorerRemoteImpl(mockDatabase)
+
+
+        // Step #1 return the query Task on get().
         whenever(mockDatabase.collection(ArgumentMatchers.anyString()).orderBy(ArgumentMatchers.anyString()).get()).thenReturn(mockQuerySnapshotTask)
 
         // Step #2 return a queryTask when registering the listener
@@ -57,7 +64,6 @@ class FireStoreManagerTest {
         whenever(mockQuerySnapshotTask.isSuccessful).thenReturn(boolean)
     }
 
-
     @Test
     fun getPoisCompletes() {
 
@@ -65,7 +71,7 @@ class FireStoreManagerTest {
         stubQueryTaskIsSuccessful(true)
         stubQuerySnapshotIsEmpty(false)
 
-        val testObserver = firestoreManager.getPois().test()
+        val testObserver = explorerRemoteImpl.getPois().test()
 
         Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
 
@@ -89,7 +95,7 @@ class FireStoreManagerTest {
         stubQueryTaskIsSuccessful(true)
         stubQuerySnapshotIsEmpty(true)
 
-        val testObserver = firestoreManager.getPois().test()
+        val testObserver = explorerRemoteImpl.getPois().test()
 
         Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
 
@@ -110,9 +116,7 @@ class FireStoreManagerTest {
         stubQueryTaskIsSuccessful(false)
         stubQuerySnapshotIsEmpty(true)
 
-        val testObserver = firestoreManager.getPois().test()
-
-        Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
+        val testObserver = explorerRemoteImpl.getPois().test()
 
         // Trigger callback reply
         // see: https://fernandocejas.com/2014/04/08/unit-testing-asynchronous-methods-with-mockito/
@@ -120,10 +124,11 @@ class FireStoreManagerTest {
         verify(mockQuerySnapshotTask).addOnCompleteListener(captor.capture())
         captor.firstValue.onComplete(mockQuerySnapshotTask)
 
+        Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
+
+
         // task Exception not mocked, so unknown is passed via Elvis operator
         testObserver.assertError(UnknownError::class.java)
 
     }
-
-
 }

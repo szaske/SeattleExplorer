@@ -12,7 +12,7 @@ import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class SeattleExplorerApplication: Application(), HasActivityInjector, HasSupportFragmentInjector{
+open class SeattleExplorerApplication: Application(), HasActivityInjector, HasSupportFragmentInjector{
 
     @Inject
     lateinit var activityInjector: DispatchingAndroidInjector<Activity>

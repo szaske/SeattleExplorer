@@ -1,0 +1,125 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "baf9a3ad1296ddfe022cd16ab1f144b4",
+    "entities": [
+      {
+        "tableName": "pois",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`poi_id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `img_url` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `imgFocalpointX` REAL NOT NULL, `imgFocalpointY` REAL NOT NULL, `collection` TEXT NOT NULL, `collectionPosition` INTEGER NOT NULL, `release` INTEGER NOT NULL, `stampText` TEXT NOT NULL, PRIMARY KEY(`poi_id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "poi_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "img_url",
+            "columnName": "img_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imgFocalpointX",
+            "columnName": "imgFocalpointX",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imgFocalpointY",
+            "columnName": "imgFocalpointY",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "collection",
+            "columnName": "collection",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "collectionPosition",
+            "columnName": "collectionPosition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "release",
+            "columnName": "release",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stampText",
+            "columnName": "stampText",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "poi_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "cachestatus",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `lastCacheTime` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastCacheTime",
+            "columnName": "lastCacheTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"baf9a3ad1296ddfe022cd16ab1f144b4\")"
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 package com.loc8r.seattleexplorer.utils
 
+import com.loc8r.seattleexplorer.cache.models.PoiCache
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
@@ -69,6 +70,20 @@ object TestDataFactory {
         val pois = mutableListOf<PoiRepository>()
         repeat(count){
             pois.add(makePoiRepo())
+        }
+        return pois
+    }
+
+    fun makePoiCache(): PoiCache {
+        return PoiCache(randomString(),randomString(),randomString(),randomString(),
+                randomLatitude(), randomLongitude(), randomDouble(), randomDouble(),
+                randomString(), randomInt(), randomInt(), randomString())
+    }
+
+    fun makePoicacheList(count: Int): List<PoiCache> {
+        val pois = mutableListOf<PoiCache>()
+        repeat(count){
+            pois.add(makePoiCache())
         }
         return pois
     }

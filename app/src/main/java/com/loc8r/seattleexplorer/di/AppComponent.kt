@@ -12,11 +12,14 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class,
+    ApplicationModule::class,
     ActivityModule::class,
     FragmentModule::class,
+    PresentationModule::class,
     ViewModelModule::class,
     RepositoryModule::class,
-    FirebaseModule::class])
+    RemoteModule::class,
+    CacheModule::class])
 interface AppComponent {
 
     //I now need to provide a way for this component to be constructed

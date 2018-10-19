@@ -1,30 +1,38 @@
 package com.loc8r.seattleexplorer.repository
 
-import com.loc8r.seattleexplorer.repository.interfaces.RepoDataStoreBroker
+import com.loc8r.seattleexplorer.cache.ExplorerCacheImpl
+import com.loc8r.seattleexplorer.repository.interfaces.ExplorerCache
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
-import com.loc8r.seattleexplorer.utils.TestDataFactory
 import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-open class CacheDataStoreBroker @Inject constructor(): RepoDataStoreBroker {
+open class CacheDataStoreBroker @Inject constructor(
+        private val cache: ExplorerCacheImpl
+): ExplorerCache {
 
+    override fun getPois(): Maybe<List<PoiRepository>> {
+        return cache.getPois()
+    }
+
+    // When the local cache saves POIs to the POI table it always does 2 things
     override fun savePois(pois: List<PoiRepository>): Completable {
-        return Completable.complete()
+        return cache.savePois(pois)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                    .andThen(cache.setLastCacheTime(System.currentTimeMillis()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
     }
 
-    override fun getPois(): Single<List<PoiRepository>> {
-        // temporary code to supply some fake data
-        return Single.just(TestDataFactory.makePoiRepoList(4))
+    override fun arePoisCached(): Single<Boolean> {
+        return cache.arePoisCached()
     }
 
-    open fun arePoisCached(): Single<Boolean> {
-        // temporary code to force the use of the cache
-        return Single.just(false)
+    override fun isPoisCacheExpired(): Single<Boolean> {
+        return cache.isPoisCacheExpired()
     }
-
-    open fun isPoisCacheExpired(): Single<Boolean> {
-        return Single.just(false)
-    }
-
 }

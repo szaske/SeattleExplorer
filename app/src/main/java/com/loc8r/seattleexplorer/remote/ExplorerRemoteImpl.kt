@@ -6,15 +6,17 @@
 
 package com.loc8r.seattleexplorer.remote
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.loc8r.seattleexplorer.remote.models.FireStorePoiResponse
 import com.loc8r.seattleexplorer.repository.interfaces.ExplorerRemote
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
+import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class FireStoreManager @Inject constructor(
+class ExplorerRemoteImpl @Inject constructor(
         private val database: FirebaseFirestore
 ): ExplorerRemote {
 
@@ -25,23 +27,21 @@ class FireStoreManager @Inject constructor(
 
     override fun getPois(): Single<List<PoiRepository>> {
 
-        return Single.create {
-            emitter: SingleEmitter<List<PoiRepository>> ->
+        return Single.create { emitter: SingleEmitter<List<PoiRepository>> ->
             database.collection(KEY_POIS).orderBy(POIS_ORDER).get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        if (task.result!!.isEmpty) {
-                            emitter.onError(IllegalStateException("Empty Poi List returned, Singles cannot be empty"))
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            if (task.result!!.isEmpty) {
+                                emitter.onError(IllegalStateException("Empty Poi List returned, Singles cannot be empty"))
+                            } else {
+                                emitter.onSuccess(task.result!!.toObjects(FireStorePoiResponse::class.java)
+                                        .map { it -> it.mapToRepository() })
+                            }
                         } else {
-                            emitter.onSuccess(task.result!!.toObjects(FireStorePoiResponse::class.java)
-                                    .map { it -> it.mapToRepository() })
+                            // An error occurred lets pass it to the Observable
+                            emitter.onError(task.exception ?: UnknownError())
                         }
-                    } else {
-                        // An error occurred lets pass it to the Observable
-                        emitter.onError(task.exception ?: UnknownError())
                     }
-                }
         }
-
     }
 }
