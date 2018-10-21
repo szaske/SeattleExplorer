@@ -1,6 +1,7 @@
 package com.loc8r.seattleexplorer.repository
 
 import com.loc8r.seattleexplorer.repository.interfaces.ExplorerRemote
+import com.loc8r.seattleexplorer.repository.models.CollectionRepository
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -13,6 +14,10 @@ open class RemoteDataStoreBroker @Inject constructor(
 
     override fun getPois(): Single<List<PoiRepository>> {
         return firestore.getPois()
+    }
+
+    override fun getCollections(): Single<List<CollectionRepository>> {
+        return firestore.getCollections()
     }
 
     fun savePois(pois: List<PoiRepository>): Completable {

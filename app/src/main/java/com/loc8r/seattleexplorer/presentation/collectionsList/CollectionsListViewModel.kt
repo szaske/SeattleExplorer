@@ -1,21 +1,13 @@
-/**
- * The Viewmodel connects the Domain to the view.  Some of the items currently handled by this viewmodel
- *
- * 1. Acts as the subscriber to the PoiData RxJava Single
- * 2. Converts the Single to LiveData
- * 3. Hosts the poiData LiveData stream, making it available to our fragment partner
- * 3. Converts (via Mapper) Domain models to Presentation models
- *
- */
-
-package com.loc8r.seattleexplorer.presentation.poiList
+package com.loc8r.seattleexplorer.presentation.collectionsList
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
-import com.loc8r.seattleexplorer.domain.GetPois
+import com.loc8r.seattleexplorer.domain.GetCollections
+import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
+import com.loc8r.seattleexplorer.presentation.models.CollectionPresentation
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PresentationMapper
 import com.loc8r.seattleexplorer.presentation.utils.Resource
@@ -23,41 +15,40 @@ import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import io.reactivex.observers.DisposableObserver
 import javax.inject.Inject
 
-open class PoiListViewModel @Inject constructor(
-        private val getPois: GetPois,
+class CollectionsListViewModel @Inject constructor(
+        private val getCollections: GetCollections,
         private val mapper: PresentationMapper
-) : ViewModel() {
-
-    private val poiData: MutableLiveData<Resource<List<PoiPresentation>>> = MutableLiveData()
+): ViewModel() {
+    private val colData: MutableLiveData<Resource<List<CollectionPresentation>>> = MutableLiveData()
 
     // initializer block, see: https://kotlinlang.org/docs/reference/classes.html
     init {
-       fetchAllPois()
+        fetchAllCollections()
     }
 
-    fun getAllPois(): LiveData<Resource<List<PoiPresentation>>> {
-        return poiData
+    fun getAllCollections(): LiveData<Resource<List<CollectionPresentation>>> {
+        return colData
     }
 
-    private fun fetchAllPois() {
+    private fun fetchAllCollections() {
         // This sets the default state of the screen
-        poiData.postValue(Resource(ResourceState.LOADING,null,null))
+        colData.postValue(Resource(ResourceState.LOADING,null,null))
 
         // This initializes the useCase which subscribes to the PoiList Single.
         // Params are optional
-        getPois.execute(PoiSubscriber())
+        getCollections.execute(ColSubscriber())
     }
 
     // this disposes of the single subscription as needed when the view is destroyed
     override fun onCleared() {
-        getPois.dispose()
+        getCollections.dispose()
         super.onCleared()
     }
 
     // my solution for converting a Single to Livedata.
     // I also considered ReactiveStreams support for LiveData, but wasn't sure that was any easier
 
-    inner class PoiSubscriber: DisposableObserver<List<PoiDomain>>(){
+    inner class ColSubscriber: DisposableObserver<List<CollectionDomain>>(){
         /**
          * Notifies the Observer that the [Observable] has finished sending push-based notifications.
          * The [Observable] will not call this method if it calls [.onError].
@@ -74,12 +65,12 @@ open class PoiListViewModel @Inject constructor(
          *
          * @param data  the item emitted by the Observable
          */
-        override fun onNext(data: List<PoiDomain>) {
-            poiData.postValue(
+        override fun onNext(data: List<CollectionDomain>) {
+            colData.postValue(
                     Resource(ResourceState.SUCCESS,
-                    data.map {
-                        mapper.mapPoiToPresentation(it)
-            },null))
+                            data.map {
+                                mapper.mapColToPresentation(it)
+                            },null))
         }
 
         /**
@@ -91,8 +82,9 @@ open class PoiListViewModel @Inject constructor(
          * the exception encountered by the Observable
          */
         override fun onError(e: Throwable) {
-            poiData.postValue(Resource(ResourceState.ERROR,null,e.localizedMessage))
+            colData.postValue(Resource(ResourceState.ERROR,null,e.localizedMessage))
             Log.e("Observable error", e.localizedMessage )
         }
     }
+
 }

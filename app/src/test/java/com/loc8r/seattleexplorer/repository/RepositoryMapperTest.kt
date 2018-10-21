@@ -7,10 +7,10 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-class PoiRepoMapperTest {
+class RepositoryMapperTest {
 
-    //create a new PoiRepoMapper
-    private val mapper = PoiRepoMapper()
+    //create a new RepositoryMapper
+    private val mapper = RepositoryMapper()
 
     @Test
     fun mapToDomainMapsCorrectly(){
@@ -18,7 +18,7 @@ class PoiRepoMapperTest {
         val poiRepository = TestDataFactory.makePoiRepo()
 
         /* When */
-        val results = mapper.mapToDomain(poiRepository)
+        val results = mapper.mapPoiToDomain(poiRepository)
 
         /* Then */
         assertEquals(poiRepository.id, results.id)
