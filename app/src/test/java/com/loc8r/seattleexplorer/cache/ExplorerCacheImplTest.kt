@@ -3,7 +3,7 @@ package com.loc8r.seattleexplorer.cache
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import com.loc8r.seattleexplorer.cache.models.PoiCache
-import com.loc8r.seattleexplorer.cache.poiCache.PoiCacheMapper
+import com.loc8r.seattleexplorer.cache.poiCache.CacheMapper
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.any
@@ -39,7 +39,7 @@ class ExplorerCacheImplTest {
             ExplorerDatabase::class.java)
             .allowMainThreadQueries()
             .build()
-    private val mockPoiCacheMapper = mock<PoiCacheMapper>()
+    private val mockPoiCacheMapper = mock<CacheMapper>()
 
     // Class Under Test
     private val explorerCacheImpl = ExplorerCacheImpl(explorerDatabase,mockPoiCacheMapper)
@@ -50,11 +50,11 @@ class ExplorerCacheImplTest {
     }
 
     fun stubMapperToCache(poi: PoiCache){
-        whenever(mockPoiCacheMapper.mapToCache(any())).thenReturn(poi)
+        whenever(mockPoiCacheMapper.mapPoiToCache(any())).thenReturn(poi)
     }
 
     fun stubMapperToRepo(poi: PoiRepository){
-        whenever(mockPoiCacheMapper.mapToRepo(any())).thenReturn(poi)
+        whenever(mockPoiCacheMapper.mapPoiToRepo(any())).thenReturn(poi)
     }
 
     @Test
@@ -85,14 +85,14 @@ class ExplorerCacheImplTest {
 
     @Test
     fun setLastCacheTimeCompletes(){
-        val testObserver = explorerCacheImpl.setLastCacheTime(10L).test()
+        val testObserver = explorerCacheImpl.setLastPoisCacheTime(10L).test()
         testObserver.assertComplete()
     }
 
     @Test
     fun setLastCacheSavesToDB(){
-        val testObserver = explorerCacheImpl.setLastCacheTime(10L).test()
-        val testCacheStatusObserver = explorerDatabase.cacheStatusDao().getCacheStatus().test()
+        val testObserver = explorerCacheImpl.setLastPoisCacheTime(10L).test()
+        val testCacheStatusObserver = explorerDatabase.cacheStatusDao().getPoisCacheStatus().test()
 
         assertEquals(10L,testCacheStatusObserver.values()[0].lastCacheTime)
     }
@@ -115,7 +115,7 @@ class ExplorerCacheImplTest {
     @Test
     fun isPoisCacheExpiredReturnsFalseWhenWithin24Hours(){
         val cacheTime = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(23)
-        explorerCacheImpl.setLastCacheTime(cacheTime).test()
+        explorerCacheImpl.setLastPoisCacheTime(cacheTime).test()
         val testObserver = explorerCacheImpl.isPoisCacheExpired().test()
         testObserver.assertValue(false)
     }
@@ -124,7 +124,7 @@ class ExplorerCacheImplTest {
     @Test
     fun isProjectsCacheExpiredReturnsTrueWhenOldCacheTime(){
         val cacheTime = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)
-        explorerCacheImpl.setLastCacheTime(cacheTime).test()
+        explorerCacheImpl.setLastPoisCacheTime(cacheTime).test()
         val testObserver = explorerCacheImpl.isPoisCacheExpired().test()
         testObserver.assertValue(true)
     }

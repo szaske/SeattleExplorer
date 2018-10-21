@@ -2,12 +2,17 @@
     <string name="app_name">SeattleExplorer</string>
 
     <!-- Start Fragment Strings -->
-    <string name="start_fragment_title">Start Fragment</string>
+    <string name="home_fragment_title">Start Fragment</string>
     <string name="to_poi_list_button_text">to POI List</string>
+    <string name="to_col_list_button_text">To Collection List</string>
 
     <!-- PoiList RecyclerView Strings -->
     <string name="poi_name_design_placeholder">Poi Name Here</string>
     <string name="poi_collection_design_placeholder">Collection Name</string>
     <string name="contentDesc_img">Point of Interest image</string>
+
+    <!-- Collection List Item Strings -->
+    <string name="col_name_design_placeholder">Collection Name Here</string>
+    <string name="collection_desc_placeholder">Description here</string>
 
 </resources>

@@ -1,8 +1,10 @@
 package com.loc8r.seattleexplorer.utils
 
 import com.loc8r.seattleexplorer.cache.models.PoiCache
+import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
+import com.loc8r.seattleexplorer.repository.models.CollectionRepository
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -87,4 +89,48 @@ object TestDataFactory {
         }
         return pois
     }
+
+    //////////////////////////////////////////
+    // Collection Factory
+    //////////////////////////////////////////
+
+    fun makeCollectionRepo(): CollectionRepository {
+        return CollectionRepository(randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString())
+    }
+
+    fun makeColRepoList(count: Int): List<CollectionRepository> {
+        val cols = mutableListOf<CollectionRepository>()
+        repeat(count){
+            cols.add(makeCollectionRepo())
+        }
+        return cols
+    }
+
+    fun makeCollectionDomain(): CollectionDomain {
+        return CollectionDomain(randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString())
+    }
+
+    fun makeColDomainList(count: Int): List<CollectionDomain> {
+        val cols = mutableListOf<CollectionDomain>()
+        repeat(count){
+            cols.add(makeCollectionDomain())
+        }
+        return cols
+    }
+
+
+
+
 }

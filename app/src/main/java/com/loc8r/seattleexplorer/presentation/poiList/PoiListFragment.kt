@@ -152,7 +152,7 @@ class PoiListFragment : Fragment() {
             }
             ResourceState.LOADING -> {
                 // While loading make progress view visible
-                progress.visibility = View.VISIBLE
+                progress_poi_List.visibility = View.VISIBLE
                 recycler_poisList.visibility = View.GONE
             }
             ResourceState.ERROR -> {
@@ -162,7 +162,7 @@ class PoiListFragment : Fragment() {
     }
 
     private fun onResourceSuccess(projects: List<PoiPresentation>?) {
-        progress.visibility = View.GONE
+        progress_poi_List.visibility = View.GONE
         projects?.let {
             poiListAdapter.pois = it
             poiListAdapter.notifyDataSetChanged()

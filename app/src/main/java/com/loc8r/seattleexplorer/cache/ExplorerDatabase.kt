@@ -4,22 +4,28 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import com.loc8r.seattleexplorer.cache.CollectionsCache.CollectionCacheDao
 import com.loc8r.seattleexplorer.cache.cacheStatus.CacheStatusDao
 import com.loc8r.seattleexplorer.cache.models.CacheStatus
+import com.loc8r.seattleexplorer.cache.models.CollectionCache
 import com.loc8r.seattleexplorer.cache.models.PoiCache
 import com.loc8r.seattleexplorer.cache.poiCache.PoiCacheDao
 
 // If you alter the DB schema you need to clear the apps data in Android settings
 // or you'll get a DB integrity error tied to the version number
-@Database(entities = arrayOf(PoiCache::class,
+@Database(entities = arrayOf(PoiCache::class, CollectionCache::class,
         CacheStatus::class), version = 1)
 abstract class ExplorerDatabase: RoomDatabase(){
 
-    // This gives us a Dao, so out DB has a reference to Poi table
+    // This gives us a Poi Dao, so out DB has a reference to Poi table
     abstract fun poiCacheDao(): PoiCacheDao
 
-    // This gives us a Dao, so out DB has a reference to these abilities
+    // This gives us a Status Dao, so out DB has a reference to these abilities
     abstract fun cacheStatusDao(): CacheStatusDao
+
+    // This gives us a Status Dao, so out DB has a reference to these abilities
+    abstract fun collectioncacheDao(): CollectionCacheDao
+
 
     // This is similar to static methods in Java
     companion object {

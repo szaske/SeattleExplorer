@@ -5,10 +5,10 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class PoiMapperTest {
+class PresentationMapperTest {
 
     // Class under Test
-    private val poiMapper = PoiMapper()
+    private val poiMapper = PresentationMapper()
 
     @Test
     fun mapToPresentationMapsDataCorrectly() {
@@ -16,7 +16,7 @@ class PoiMapperTest {
         val poiDomain = TestDataFactory.makePoiDomain()
 
         /* When */
-        val poiPresentation = poiMapper.mapToPresentation(poiDomain)
+        val poiPresentation = poiMapper.mapPoiToPresentation(poiDomain)
 
         /* Then */
         assertEquals(poiDomain.id, poiPresentation.id)

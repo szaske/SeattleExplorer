@@ -5,7 +5,7 @@ import android.arch.lifecycle.Observer
 import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
-import com.loc8r.seattleexplorer.presentation.utils.PoiMapper
+import com.loc8r.seattleexplorer.presentation.utils.PresentationMapper
 import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.*
@@ -28,7 +28,7 @@ class PoiListViewModelTest {
 
     //Mock objects needed to instantiate the class under test
     private val mockGetPois = mock<GetPois>()
-    private val mockMapper = mock<PoiMapper>()
+    private val mockMapper = mock<PresentationMapper>()
     private val mockObserver = mock<Observer<Resource<List<PoiPresentation>>>>()
 
     // Class being tested
@@ -45,7 +45,7 @@ class PoiListViewModelTest {
 
 
     private fun stubMapper(poi_Domain: PoiDomain, poiPresentation: PoiPresentation) {
-        whenever(mockMapper.mapToPresentation(poi_Domain)).thenReturn(poiPresentation)
+        whenever(mockMapper.mapPoiToPresentation(poi_Domain)).thenReturn(poiPresentation)
     }
 
     @Test
