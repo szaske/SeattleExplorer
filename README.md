@@ -119,3 +119,5 @@ Once I started this process I found I needed to refactor a bunch of my previous 
 * Updated the DataRepository class to have the ability to getCollections
 * Updated ExplorerCacheImpl to support Collection functions
 * Updated ExplorerRemoteImpl to support Collection functions
+
+**STEP #18. Collection list unit tests & Timber.** This step is just some basic project clean up. I added a lot of code in the last step and now I needed to catch up on my unit tests. It's a good thing I did too. I found a bug in my downloading collections Firestore code. Firestore's QuerySnapshot class includes a nice toObject method that can convert your documents to any class you'd like. Unfortunately because of the way Firestore stores it's documents that method does include the document id strings when you query the documents. That meant I needed to add some additional code to ensure that Id's get included. Creating the unit tests helped me find this bug. Also, since my code is starting to get larger I decided to also include [Timber](https://github.com/JakeWharton/timber) in my project.

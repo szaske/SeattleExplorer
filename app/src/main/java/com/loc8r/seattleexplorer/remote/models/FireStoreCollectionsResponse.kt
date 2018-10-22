@@ -10,6 +10,17 @@ data class FireStoreCollectionsResponse(var id: String = "",
                                         val color: String = "",
                                         val textColor: String = "#FFF")
 {
+
+    fun withId(id: String): FireStoreCollectionsResponse{
+        return FireStoreCollectionsResponse(id,
+                name,
+                description,
+                date,
+                img_url,
+                color,
+                textColor)
+    }
+
     fun mapToRepository() = CollectionRepository(id,
             name,
             description,

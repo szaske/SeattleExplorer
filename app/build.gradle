@@ -11,8 +11,8 @@ android {
         applicationId "com.loc8r.seattleexplorer"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -55,6 +55,7 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     //DI
     implementation "com.google.dagger:dagger:$daggerVersion"

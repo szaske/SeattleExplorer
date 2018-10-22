@@ -15,7 +15,6 @@ import dagger.android.AndroidInjection
 class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("Tes", "Dagger start")
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)

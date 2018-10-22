@@ -14,7 +14,7 @@ open class GetCollections @Inject constructor(
         private val domainRepository: DomainRepository,
         observingThread: ObservingThread): ObservableUseCaseBase<List<CollectionDomain>, Nothing?>(observingThread) {
 
-    override fun buildUseCaseObservable(params: Nothing?): Observable<List<CollectionDomain>> {
+    public override fun buildUseCaseObservable(params: Nothing?): Observable<List<CollectionDomain>> {
         return domainRepository.getCollections()
     }
 
