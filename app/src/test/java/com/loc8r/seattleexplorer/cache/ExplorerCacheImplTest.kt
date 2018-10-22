@@ -2,8 +2,10 @@ package com.loc8r.seattleexplorer.cache
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
+import com.loc8r.seattleexplorer.cache.models.CollectionCache
 import com.loc8r.seattleexplorer.cache.models.PoiCache
 import com.loc8r.seattleexplorer.cache.poiCache.CacheMapper
+import com.loc8r.seattleexplorer.repository.models.CollectionRepository
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.any
@@ -49,20 +51,37 @@ class ExplorerCacheImplTest {
 
     }
 
-    fun stubMapperToCache(poi: PoiCache){
+    fun stubMapPoiToCache(poi: PoiCache){
         whenever(mockPoiCacheMapper.mapPoiToCache(any())).thenReturn(poi)
     }
 
-    fun stubMapperToRepo(poi: PoiRepository){
+    fun stubMapColToCache(col: CollectionCache){
+        whenever(mockPoiCacheMapper.mapColToCache(any())).thenReturn(col)
+    }
+
+    fun stubMapPoiToRepo(poi: PoiRepository){
         whenever(mockPoiCacheMapper.mapPoiToRepo(any())).thenReturn(poi)
+    }
+
+    fun stubMapColToRepo(col: CollectionRepository){
+        whenever(mockPoiCacheMapper.mapColToRepo(any())).thenReturn(col)
     }
 
     @Test
     fun savePoisCompletes(){
         val poiCache = TestDataFactory.makePoiCache()
-        stubMapperToCache(poiCache)
+        stubMapPoiToCache(poiCache)
         val pois = TestDataFactory.makePoiRepoList(3)
         val testObserver = explorerCacheImpl.savePois(pois).test()
+        testObserver.assertComplete()
+    }
+
+    @Test
+    fun saveCollectionsCompletes(){
+        val colCache = TestDataFactory.makeCollectionCache()
+        stubMapColToCache(colCache)
+        val cols = TestDataFactory.makeColRepoList(3)
+        val testObserver = explorerCacheImpl.saveCollections(cols).test()
         testObserver.assertComplete()
     }
 
@@ -70,8 +89,8 @@ class ExplorerCacheImplTest {
     fun savePoisSavesPoisToDB(){
         val poiCache = TestDataFactory.makePoiCache()
         val poiRepo = TestDataFactory.makePoiRepo()
-        stubMapperToCache(poiCache)
-        stubMapperToRepo(poiRepo)
+        stubMapPoiToCache(poiCache)
+        stubMapPoiToRepo(poiRepo)
         val pois = listOf(poiRepo)
         val testObserver = explorerCacheImpl.savePois(pois).test()
         testObserver.assertComplete()
@@ -82,20 +101,51 @@ class ExplorerCacheImplTest {
         assertEquals(testObserver2.values()[0].firstOrNull()?.name,poiRepo.name)
     }
 
+    @Test
+    fun saveColsSavesColsToDB(){
+        val colCache = TestDataFactory.makeCollectionCache()
+        val colRepo = TestDataFactory.makeCollectionRepo()
+        stubMapColToCache(colCache)
+        stubMapColToRepo(colRepo)
+        val cols = listOf(colRepo)
+        val testObserver = explorerCacheImpl.saveCollections(cols).test()
+        testObserver.assertComplete()
+
+        val testObserver2 = explorerCacheImpl.getCollections().test()
+
+        testObserver2.assertValue(listOf(colRepo))
+        assertEquals(testObserver2.values()[0].firstOrNull()?.name,colRepo.name)
+    }
+
 
     @Test
-    fun setLastCacheTimeCompletes(){
+    fun setPoisLastCacheTimeCompletes(){
         val testObserver = explorerCacheImpl.setLastPoisCacheTime(10L).test()
         testObserver.assertComplete()
     }
 
     @Test
-    fun setLastCacheSavesToDB(){
-        val testObserver = explorerCacheImpl.setLastPoisCacheTime(10L).test()
+    fun setColsLastCacheTimeCompletes(){
+        val testObserver = explorerCacheImpl.setLastColsCacheTime(10L).test()
+        testObserver.assertComplete()
+    }
+
+    @Test
+    fun setPoisLastCacheSavesToDB(){
+        explorerCacheImpl.setLastPoisCacheTime(10L).test()
         val testCacheStatusObserver = explorerDatabase.cacheStatusDao().getPoisCacheStatus().test()
 
         assertEquals(10L,testCacheStatusObserver.values()[0].lastCacheTime)
     }
+
+    @Test
+    fun setColsLastCacheSavesToDB(){
+        explorerCacheImpl.setLastColsCacheTime(10L).test()
+        val testCacheStatusObserver = explorerDatabase.cacheStatusDao().getCollectionCacheStatus().test()
+
+        assertEquals(10L,testCacheStatusObserver.values()[0].lastCacheTime)
+    }
+
 
     @Test
     fun getPoisCompletes(){
@@ -103,10 +153,23 @@ class ExplorerCacheImplTest {
         testObserver.assertComplete()
     }
 
+    @Test
+    fun getColsCompletes(){
+        val testObserver = explorerCacheImpl.getCollections().test()
+        testObserver.assertComplete()
+    }
+
     // Since I'm not setting the cache, it should return "Expired" by default
     @Test
     fun isPoisCacheExpiredReturnsTrueWhenNull(){
         val testObserver = explorerCacheImpl.isPoisCacheExpired().test()
+        testObserver.assertValue(true)
+    }
+
+    // Since I'm not setting the cache, it should return "Expired" by default
+    @Test
+    fun isColsCacheExpiredReturnsTrueWhenNull(){
+        val testObserver = explorerCacheImpl.isCollectionsCacheExpired().test()
         testObserver.assertValue(true)
     }
 
@@ -122,10 +185,18 @@ class ExplorerCacheImplTest {
 
     // Here I set the cache to 24 hours ago, so it should pass as expired, since the expiration time is set for 24 hr
     @Test
-    fun isProjectsCacheExpiredReturnsTrueWhenOldCacheTime(){
+    fun isPoisCacheExpiredReturnsTrueWhenOldCacheTime(){
         val cacheTime = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)
         explorerCacheImpl.setLastPoisCacheTime(cacheTime).test()
         val testObserver = explorerCacheImpl.isPoisCacheExpired().test()
+        testObserver.assertValue(true)
+    }
+
+    @Test
+    fun isColsCacheExpiredReturnsTrueWhenOldCacheTime(){
+        val cacheTime = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)
+        explorerCacheImpl.setLastColsCacheTime(cacheTime).test()
+        val testObserver = explorerCacheImpl.isCollectionsCacheExpired().test()
         testObserver.assertValue(true)
     }
 
@@ -136,14 +207,33 @@ class ExplorerCacheImplTest {
     }
 
     @Test
+    fun areColsCachedReturnsFalseOnNull(){
+        val testObserver = explorerCacheImpl.areCollectionsCached().test()
+        testObserver.assertValue(false)
+    }
+
+    @Test
     fun arePoisCachedReturnsTrueOnAny(){
 
         val poiCache = TestDataFactory.makePoiCache()
-        stubMapperToCache(poiCache)
+        stubMapPoiToCache(poiCache)
         val pois = TestDataFactory.makePoiRepoList(3)
         explorerCacheImpl.savePois(pois).test()
 
         val testObserver = explorerCacheImpl.arePoisCached().test()
         testObserver.assertValue(true)
     }
+
+    @Test
+    fun areColsCachedReturnsTrueOnAny(){
+
+        val colCache = TestDataFactory.makeCollectionCache()
+        stubMapColToCache(colCache)
+        val cols = TestDataFactory.makeColRepoList(3)
+        explorerCacheImpl.saveCollections(cols).test()
+
+        val testObserver = explorerCacheImpl.areCollectionsCached().test()
+        testObserver.assertValue(true)
+    }
+
 }

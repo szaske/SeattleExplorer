@@ -4,6 +4,10 @@ buildscript {
 
     // Define versions in a single place
     ext {
+        // App version
+        versionName = '0.17.0' // X.Y.Z; X = Major, Y = minor, Z = Patch level
+        versionCode = 0170 // XYZZM; M = Module (tv, mobile)
+
         // Sdk and tools
         compileSdkVersion = 27
         minSdkVersion = 21
@@ -30,6 +34,8 @@ buildscript {
         roomVersion = '1.1.1'
         debugDBVersion = '1.0.4'
         javaxAnnotationVersion = '1.0'
+        timberVersion = '4.7.1'
+
 
         // Testing
         junitVersion = '4.12'

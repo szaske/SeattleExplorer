@@ -21,6 +21,7 @@ import com.loc8r.seattleexplorer.presentation.utils.PresentationMapper
 import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import io.reactivex.observers.DisposableObserver
+import timber.log.Timber
 import javax.inject.Inject
 
 open class PoiListViewModel @Inject constructor(
@@ -63,7 +64,7 @@ open class PoiListViewModel @Inject constructor(
          * The [Observable] will not call this method if it calls [.onError].
          */
         override fun onComplete() {
-            Log.i("poiSubscriber: ", "completed")
+            Timber.i("Poi subscription completed")
         }
 
         /**
@@ -92,7 +93,7 @@ open class PoiListViewModel @Inject constructor(
          */
         override fun onError(e: Throwable) {
             poiData.postValue(Resource(ResourceState.ERROR,null,e.localizedMessage))
-            Log.e("Observable error", e.localizedMessage )
+            Timber.e("""Observable error: ${e.localizedMessage}""")
         }
     }
 }

@@ -75,12 +75,10 @@ class ExplorerCacheImpl @Inject constructor(
         return Completable.defer {
             explorerDatabase
                     .cacheStatusDao()
-                    .setPoisCacheStatus(CacheStatus(id = LastCacheTime.COLLECTION, lastCacheTime = lastCache))
+                    .setCollectionCacheStatus(CacheStatus(id = LastCacheTime.COLLECTIONS, lastCacheTime = lastCache))
             Completable.complete()
         }
     }
-
-
 
     override fun isPoisCacheExpired(): Single<Boolean> {
         val currentTime = System.currentTimeMillis()
@@ -102,7 +100,7 @@ class ExplorerCacheImpl @Inject constructor(
         val expirationTime = TimeUnit.DAYS.toMillis(CACHE_LENGTH_IN_DAYS)
 
         return explorerDatabase.cacheStatusDao().getCollectionCacheStatus()
-                .onErrorReturn { CacheStatus( id = LastCacheTime.COLLECTION, lastCacheTime = 0) }
+                .onErrorReturn { CacheStatus( id = LastCacheTime.COLLECTIONS, lastCacheTime = 0) }
                 .map {
                     currentTime - it.lastCacheTime > expirationTime
                 }

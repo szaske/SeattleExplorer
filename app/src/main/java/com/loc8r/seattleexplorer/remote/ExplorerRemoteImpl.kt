@@ -6,17 +6,16 @@
 
 package com.loc8r.seattleexplorer.remote
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.loc8r.seattleexplorer.remote.models.FireStoreCollectionsResponse
 import com.loc8r.seattleexplorer.remote.models.FireStorePoiResponse
 import com.loc8r.seattleexplorer.repository.interfaces.ExplorerRemote
 import com.loc8r.seattleexplorer.repository.models.CollectionRepository
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
-import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Single
+import io.reactivex.SingleEmitter
 import javax.inject.Inject
+
 
 class ExplorerRemoteImpl @Inject constructor(
         private val database: FirebaseFirestore
@@ -38,6 +37,7 @@ class ExplorerRemoteImpl @Inject constructor(
                             if (task.result!!.isEmpty) {
                                 emitter.onError(IllegalStateException("Empty Poi List returned, Singles cannot be empty"))
                             } else {
+                                // see collections code for future data schema changes, so I can delete id row in Firestore
                                 emitter.onSuccess(task.result!!.toObjects(FireStorePoiResponse::class.java)
                                         .map { it -> it.mapToRepository() })
                             }
@@ -58,7 +58,14 @@ class ExplorerRemoteImpl @Inject constructor(
                             if (task.result!!.isEmpty) {
                                 emitter.onError(IllegalStateException("Empty Collections List returned, Singles cannot be empty"))
                             } else {
-                                emitter.onSuccess(task.result!!.toObjects(FireStoreCollectionsResponse::class.java)
+                                val cols  = mutableListOf<FireStoreCollectionsResponse>()
+                                for (documentSnapshot in task.result!!.documents) {
+                                    // here I can get the id with my special withId function
+                                    val collection = documentSnapshot.toObject(FireStoreCollectionsResponse::class.java)!!
+                                            .withId(documentSnapshot.id)
+                                    cols.add(collection)
+                                }
+                                emitter.onSuccess(cols
                                         .map { it -> it.mapToRepository() })
                             }
                         } else {

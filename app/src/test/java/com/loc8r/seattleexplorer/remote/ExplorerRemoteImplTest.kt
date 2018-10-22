@@ -89,6 +89,33 @@ class ExplorerRemoteImplTest {
     }
 
     @Test
+    fun getCollectionsCompletes() {
+
+        // GIVEN
+        stubQueryTaskIsSuccessful(true)
+        stubQuerySnapshotIsEmpty(false)
+
+        val testObserver = explorerRemoteImpl.getCollections().test()
+
+        Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
+
+        // Trigger callback reply
+        // see: https://fernandocejas.com/2014/04/08/unit-testing-asynchronous-methods-with-mockito/
+        val captor = argumentCaptor<OnCompleteListener<QuerySnapshot>>()
+        verify(mockQuerySnapshotTask).addOnCompleteListener(captor.capture())
+        captor.firstValue.onComplete(mockQuerySnapshotTask)
+
+        // THEN
+        testObserver
+                .assertNoErrors()
+                .assertValueCount(1)
+                .assertComplete()
+    }
+
+
+
+
+    @Test
     fun getPoisErrorsOnEmptyQuerySnapshot() {
 
         // GIVEN
@@ -108,6 +135,28 @@ class ExplorerRemoteImplTest {
         testObserver.assertError(IllegalStateException::class.java)
 
     }
+
+    @Test
+    fun getCollectionsErrorsOnEmptyQuerySnapshot() {
+
+        // GIVEN
+        stubQueryTaskIsSuccessful(true)
+        stubQuerySnapshotIsEmpty(true)
+
+        val testObserver = explorerRemoteImpl.getCollections().test()
+
+        Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
+
+        // Trigger callback reply
+        // see: https://fernandocejas.com/2014/04/08/unit-testing-asynchronous-methods-with-mockito/
+        val captor = argumentCaptor<OnCompleteListener<QuerySnapshot>>()
+        verify(mockQuerySnapshotTask).addOnCompleteListener(captor.capture())
+        captor.firstValue.onComplete(mockQuerySnapshotTask)
+
+        testObserver.assertError(IllegalStateException::class.java)
+
+    }
+
 
     @Test
     fun getPoisErrorsOnNoSuccessQuerySnapshot() {
@@ -131,4 +180,28 @@ class ExplorerRemoteImplTest {
         testObserver.assertError(UnknownError::class.java)
 
     }
+
+    @Test
+    fun getCollectionsErrorsOnNoSuccessQuerySnapshot() {
+
+        // GIVEN
+        stubQueryTaskIsSuccessful(false)
+        stubQuerySnapshotIsEmpty(true)
+
+        val testObserver = explorerRemoteImpl.getCollections().test()
+
+        // Trigger callback reply
+        // see: https://fernandocejas.com/2014/04/08/unit-testing-asynchronous-methods-with-mockito/
+        val captor = argumentCaptor<OnCompleteListener<QuerySnapshot>>()
+        verify(mockQuerySnapshotTask).addOnCompleteListener(captor.capture())
+        captor.firstValue.onComplete(mockQuerySnapshotTask)
+
+        Mockito.verify(mockQuerySnapshotTask, times(1)).addOnCompleteListener(anyOrNull())
+
+
+        // task Exception not mocked, so unknown is passed via Elvis operator
+        testObserver.assertError(UnknownError::class.java)
+
+    }
+
 }

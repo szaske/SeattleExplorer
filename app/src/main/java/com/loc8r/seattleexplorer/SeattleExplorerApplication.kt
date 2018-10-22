@@ -5,11 +5,13 @@ import android.app.Application
 import android.support.v4.app.Fragment
 import com.google.firebase.FirebaseApp
 import com.loc8r.seattleexplorer.di.DaggerAppComponent
+import com.loc8r.seattleexplorer.utils.ReleaseTree
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 open class SeattleExplorerApplication: Application(), HasActivityInjector, HasSupportFragmentInjector{
@@ -28,6 +30,12 @@ open class SeattleExplorerApplication: Application(), HasActivityInjector, HasSu
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(ReleaseTree())
+        }
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

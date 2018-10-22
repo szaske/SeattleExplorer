@@ -1,5 +1,6 @@
 package com.loc8r.seattleexplorer.utils
 
+import com.loc8r.seattleexplorer.cache.models.CollectionCache
 import com.loc8r.seattleexplorer.cache.models.PoiCache
 import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
@@ -126,6 +127,24 @@ object TestDataFactory {
         val cols = mutableListOf<CollectionDomain>()
         repeat(count){
             cols.add(makeCollectionDomain())
+        }
+        return cols
+    }
+
+    fun makeCollectionCache(): CollectionCache {
+        return CollectionCache(randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                randomString())
+    }
+
+    fun makeColCacheList(count: Int): List<CollectionCache> {
+        val cols = mutableListOf<CollectionCache>()
+        repeat(count){
+            cols.add(makeCollectionCache())
         }
         return cols
     }
