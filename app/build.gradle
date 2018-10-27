@@ -45,7 +45,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:exifinterface:$supportLibraryVersion"
-    //Added to eliminate gradle version errors
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.navigation:navigation-fragment:$navigationVersion"
@@ -56,6 +55,11 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    //implementation "android.arch.work:work-runtime:$work_version" // use -ktx for Kotlin
+//    implementation "android.arch.work:work-runtime-ktx:$workVersion" // use -ktx for Kotlin
+//    implementation "android.arch.work:work-firebase:$workVersion" // optional - Firebase JobDispatcher support
+//    androidTestImplementation "android.arch.work:work-testing:$workVersion" // optional - Test helpers
 
     //DI
     implementation "com.google.dagger:dagger:$daggerVersion"

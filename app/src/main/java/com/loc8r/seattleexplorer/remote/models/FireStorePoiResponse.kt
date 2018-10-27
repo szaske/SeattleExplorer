@@ -1,7 +1,11 @@
 package com.loc8r.seattleexplorer.remote.models
 
+import com.google.firebase.firestore.Exclude
 import com.loc8r.seattleexplorer.repository.models.PoiRepository
 
+/**
+ * Excluded fields are temporarily in Firestore for backwards compat with other client app.
+ */
 data class FireStorePoiResponse(var id: String = "",
                                 val name: String = "",
                                 val description: String = "",
@@ -13,7 +17,10 @@ data class FireStorePoiResponse(var id: String = "",
                                 val collection: String = "",
                                 val collectionPosition: Int = 0,
                                 val release: Int = 0,
-                                val stampText: String = ""){
+                                val stampText: String = "",
+                                @Exclude val stamp: String = "",
+                                @Exclude val stamped: Boolean = false,
+                                @Exclude val stampChecked: Boolean = false){
     fun mapToRepository() = PoiRepository(id,
             name,
             description,

@@ -3,10 +3,7 @@ package com.loc8r.seattleexplorer.di.modules
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.loc8r.seattleexplorer.di.ViewModelFactory
-import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
-import com.loc8r.seattleexplorer.presentation.poiList.PoiListViewModel
-import com.loc8r.seattleexplorer.presentation.UiMainThread
-import com.loc8r.seattleexplorer.presentation.collectionsList.CollectionsListViewModel
+import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -18,13 +15,18 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(PoiListViewModel::class)
-    abstract fun bindPoiDetailViewModel(viewModel: PoiListViewModel): ViewModel
+    @ViewModelKey(SharedViewModel::class)
+    abstract fun bindSharedViewModel(viewModel: SharedViewModel): ViewModel
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(CollectionsListViewModel::class)
-    abstract fun bindCollectionsListViewModel(viewModel: CollectionsListViewModel): ViewModel
+//    @Binds
+//    @IntoMap
+//    @ViewModelKey(PoiListViewModel::class)
+//    abstract fun bindPoiDetailViewModel(viewModel: PoiListViewModel): ViewModel
+
+//    @Binds
+//    @IntoMap
+//    @ViewModelKey(CollectionsListViewModel::class)
+//    abstract fun bindCollectionsListViewModel(viewModel: CollectionsListViewModel): ViewModel
 
 
     // Because I want to use my own View model factory instead of the default one, I need to tell
