@@ -1,8 +1,10 @@
-package com.loc8r.seattleexplorer.presentation.poiList
+package com.loc8r.seattleexplorer.presentation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.loc8r.seattleexplorer.domain.GetCollections
 import com.loc8r.seattleexplorer.domain.GetPois
+import com.loc8r.seattleexplorer.domain.RefreshAll
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.PresentationMapper
@@ -18,21 +20,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-
 @RunWith(JUnit4::class)
-class PoiListViewModelTest {
-
+class SharedViewModelTest {
     // This test rule swaps the executor and allows us to test Jetpack components
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     //Mock objects needed to instantiate the class under test
     private val mockGetPois = mock<GetPois>()
+    private val mockGetCollections = mock<GetCollections>()
+    private val mockRefreshAll = mock<RefreshAll>()
     private val mockMapper = mock<PresentationMapper>()
     private val mockObserver = mock<Observer<Resource<List<PoiPresentation>>>>()
 
     // Class being tested
-    private lateinit var poiListViewModel: PoiListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
 
     @Before
     fun setup() {
@@ -40,7 +42,7 @@ class PoiListViewModelTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler {
             _ -> Schedulers.trampoline()
         }
-        poiListViewModel = PoiListViewModel(mockGetPois,mockMapper)
+        sharedViewModel = SharedViewModel(mockGetCollections,mockGetPois,mockRefreshAll,mockMapper)
     }
 
 
@@ -48,11 +50,7 @@ class PoiListViewModelTest {
         whenever(mockMapper.mapPoiToPresentation(poi_Domain)).thenReturn(poiPresentation)
     }
 
-    @Test
-    fun fetchAllPoisExecutesUseCaseOnStart(){
-
-        verify(mockGetPois, times(1)).execute(com.nhaarman.mockitokotlin2.any(),eq(null))
-    }
+    // TODO Need to fill out and add more unit tests
 
     @Test
     fun poiSubscriberOnNextBecomesLiveData(){
@@ -62,13 +60,13 @@ class PoiListViewModelTest {
         stubMapper(poiDomain,poiPresentation)
 
         // Create mockObserver on poiData liveData
-        poiListViewModel.getAllPois().observeForever(mockObserver)
+        sharedViewModel.getAllPois().observeForever(mockObserver)
 
         /* When */   // insert item into RxJava Observable
-        poiListViewModel.PoiSubscriber().onNext(listOf(poiDomain))
+        sharedViewModel.PoiSubscriber().onNext(listOf(poiDomain))
 
         /* Then */   // Check live data
-        val results = poiListViewModel.getAllPois().value
+        val results = sharedViewModel.getAllPois().value
         assertEquals(results?.data?.get(0)?.name,poiPresentation.name)
     }
 }

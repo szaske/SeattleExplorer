@@ -3,8 +3,11 @@ package com.loc8r.seattleexplorer.repository
 import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
 import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
+import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 open class DataRepository @Inject constructor(
@@ -112,6 +115,10 @@ open class DataRepository @Inject constructor(
         return collections
     }
 
-
-
+    override fun refreshAll(): Completable {
+        return getCollections().ignoreElements()
+                    .andThen(getPois().ignoreElements()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.io()))
+    }
 }

@@ -1,6 +1,5 @@
 package com.loc8r.seattleexplorer.presentation.home
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.loc8r.seattleexplorer.R
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
@@ -29,14 +29,14 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), View.OnClickListener {
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
-    // Save a variable for the viewModel
-    private lateinit var viewModel: HomeViewModel
+    lateinit var navController: NavController
 
     override fun onAttach(context: Context) {
         // Here's I'm kicking off the injection process for the Fragment
@@ -65,21 +65,32 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        // TODO: Use the ViewModel
+
+        // declare viewModel here
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // This navigates according to the id's within the nav_graph, not a view in a layout
-        goto_poiList_bt?.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.action_homeFragment_to_poiListFragment)
-        }
+        // Init navController
+        navController = Navigation.findNavController(view)
 
-        // This navigates according to the id's within the nav_graph, not a view in a layout
-        goto_colList_bt?.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.action_homeFragment_to_collectionsListFragment)
+        // Set listeners
+        goto_poiList_bt?.setOnClickListener(this)
+        goto_colList_bt?.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View?) {
+        view.let {
+            when (it) {
+                goto_poiList_bt -> {
+                    // This navigates according to the id's within the nav_graph, not a view in a layout
+                    navController.navigate(R.id.action_homeFragment_to_poiListFragment)
+                }
+                goto_colList_bt -> {
+                    navController.navigate(R.id.action_homeFragment_to_collectionsListFragment)
+                }
+            }
         }
     }
 

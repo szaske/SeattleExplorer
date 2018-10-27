@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.loc8r.seattleexplorer.R
 import com.loc8r.seattleexplorer.di.ViewModelFactory
+import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import com.loc8r.seattleexplorer.presentation.models.CollectionPresentation
 import com.loc8r.seattleexplorer.presentation.utils.Resource
@@ -26,7 +27,8 @@ class CollectionsListFragment : Fragment() {
 
     // Here I'm injecting the viewModelFactory and NOT the viewModel
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var collectionsListViewModel: CollectionsListViewModel
+    // private lateinit var collectionsListViewModel: CollectionsListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
 
     // RecyclerView variables
     private var mRecyclerView: RecyclerView? = null
@@ -71,11 +73,15 @@ class CollectionsListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // assigning the viewmodel according to the map in the viewModelFactory
-        collectionsListViewModel = ViewModelProviders.of(this,viewModelFactory).get(CollectionsListViewModel::class.java)
+        // assigning the viewModel according to the map in the viewModelFactory
+        sharedViewModel = ViewModelProviders.of(activity!!,viewModelFactory).get(SharedViewModel::class.java)
+        // collectionsListViewModel = ViewModelProviders.of(this,viewModelFactory).get(CollectionsListViewModel::class.java)
+
+        //Start collections Observable
+        sharedViewModel.fetchAllCollections()
 
         // This Requests from the Presentation layer the liveData stream which is nothing
-        collectionsListViewModel.getAllCollections().observe(this,Observer<Resource<List<CollectionPresentation>>> { it ->
+        sharedViewModel.getAllCollections().observe(this,Observer<Resource<List<CollectionPresentation>>> { it ->
                     // let is used to test against null
                     it?.let {
                         handleData(it)

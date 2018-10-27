@@ -2,7 +2,7 @@
  * The Fragment acts as the View in the Model, View, ViewModel design pattern.  It is responsible for
  *
  * 1. Instantiating the View and the items that make up the view.
- * 2. Attaching the viewmodel data to the view components
+ * 2. Attaching the viewModel data to the view components
  *
  * Ideally the view would be made up completely of XML.  Data-binding seems to be the preferred method of accomplishing #2 above, but the approach doesn't
  *
@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.loc8r.seattleexplorer.R
 import com.loc8r.seattleexplorer.di.ViewModelFactory
+import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import com.loc8r.seattleexplorer.presentation.models.PoiPresentation
 import com.loc8r.seattleexplorer.presentation.utils.Resource
@@ -56,7 +57,8 @@ class PoiListFragment : Fragment() {
 
     // Here I'm injecting the viewModelFactory and NOT the viewModel
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var poiListViewModel: PoiListViewModel
+    //private lateinit var poiListViewModel: PoiListViewModel
+    private lateinit var sharedViewModel: SharedViewModel
 
     // RecyclerView variables
     private var mRecyclerView: RecyclerView? = null
@@ -126,11 +128,14 @@ class PoiListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // assigning the viewmodel according to the map in the viewModelFactory
-        poiListViewModel = ViewModelProviders.of(this,viewModelFactory).get(PoiListViewModel::class.java)
+        // assigning the viewModel according to the map in the viewModelFactory
+        sharedViewModel = ViewModelProviders.of(activity!!,viewModelFactory).get(SharedViewModel::class.java)
+
+        // execute use case, starting the observable data flowing
+        sharedViewModel.fetchAllPois()
 
         // This Requests from the Presentation layer the liveData stream which is nothing
-        poiListViewModel.getAllPois().observe(this,
+        sharedViewModel.getAllPois().observe(this,
                 Observer<Resource<List<PoiPresentation>>> { it ->
                     // let is used to test against null
                     it?.let {

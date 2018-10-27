@@ -3,7 +3,7 @@
  * the default only works with empty constructors.  This code helps us map our viewModels to their
  * Dagger providers which will instantiate the multiple dependencies passed into their constuctor.
  *
- * for more details see: https://dev.to/brightdevs/injectable-android-viewmodels--1d5l
+ * for more details see: https://dev.to/brightdevs/injectable-android-viewModels--1d5l
  *
  */
 

@@ -1,18 +1,29 @@
 <resources>
+    <!-- App Strings -->
     <string name="app_name">SeattleExplorer</string>
 
-    <!-- Start Fragment Strings -->
-    <string name="home_fragment_title">Start Fragment</string>
-    <string name="to_poi_list_button_text">to POI List</string>
-    <string name="to_col_list_button_text">To Collection List</string>
+    <!-- Collection List Fragment Strings -->
+    <string name="col_name_design_placeholder">Collection Name Here</string>
+    <string name="collection_desc_placeholder">Description here</string>
+
+    <!-- Login Fragment Strings -->
+    <string name="email_hint">email hint</string>
+    <string name="password_hint">password hint</string>
+    <string name="log_in_button">Log In</string>
 
     <!-- PoiList RecyclerView Strings -->
     <string name="poi_name_design_placeholder">Poi Name Here</string>
     <string name="poi_collection_design_placeholder">Collection Name</string>
     <string name="contentDesc_img">Point of Interest image</string>
 
-    <!-- Collection List Item Strings -->
-    <string name="col_name_design_placeholder">Collection Name Here</string>
-    <string name="collection_desc_placeholder">Description here</string>
+    <!-- Start Fragment Strings -->
+    <string name="home_fragment_title">Start Fragment</string>
+    <string name="to_poi_list_button_text">to POI List</string>
+    <string name="to_col_list_button_text">To Collection List</string>
 
+    <!-- Welcome Fragment Strings -->
+    <string name="welcome_title">Welcome to Seattle Explorer</string>
+    <string name="welcome_description">Welcome Description</string>
+    <string name="home_button">To home</string>
+    <string name="signup_link">Or signup...</string>
 </resources>
