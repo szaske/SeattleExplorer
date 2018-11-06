@@ -1,6 +1,6 @@
 package com.loc8r.seattleexplorer.domain.base
 
-import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
+import com.loc8r.seattleexplorer.domain.interfaces.ObservingThreadInterface
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 abstract class ObservableUseCaseBase<T, in Params> constructor(
         // an abstraction for the schedule thread for each observable
         // required in the constructor
-        private val observingThread: ObservingThread) {
+        private val observingThread: ObservingThreadInterface) {
 
     // A reference to the disposable observable.  Using plural naming since this is actually a set
     // and not a single item

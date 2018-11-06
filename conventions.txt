@@ -1,0 +1,33 @@
+I'll follow the coding guidelines described at https://github.com/ribot/android-guidelines/blob/master/project_and_code_guidelines.md
+
+Naming conventions for variables and components
+
+<ACTIVITY NAME>_activity.xml - for all activities
+dialog_<DIALOG NAME>.xml - for all custom dialogs
+row_<LIST_NAME>.xml - for custom row for listview
+fragment_<FRAGMENT_NAME>.xml - for all fragments
+Naming convention for component/widget in xml files:
+
+All components for X activity must start with the activity name and components should have prefix or short name to describe type. For example, name for Main activity component should be like the following:
+
+<activityname>_<type>_<name>
+main_btn_login
+main_et_username
+main_et_password
+
+Short name of major components:
+Button - btn
+Toolbar - tbar
+Fragment - fr
+EditText - et
+TextView - tv
+ProgressBar - pb
+Checkbox - chk
+RadioButton - rb
+ToggleButton - tb
+Spinner - spn
+Menu - mnu
+ListView - lv
+GalleryView - gv
+LinearLayout -ll
+RelativeLayout - rl

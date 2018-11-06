@@ -8,12 +8,12 @@
 
 package com.loc8r.seattleexplorer.presentation
 
-import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
+import com.loc8r.seattleexplorer.domain.interfaces.ObservingThreadInterface
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class UiMainThread @Inject constructor(): ObservingThread {
+class UiMainThread @Inject constructor(): ObservingThreadInterface {
     override val scheduler: Scheduler
         get() = AndroidSchedulers.mainThread()
 }

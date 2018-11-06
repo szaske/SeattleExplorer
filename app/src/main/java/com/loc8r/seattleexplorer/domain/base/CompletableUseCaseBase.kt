@@ -11,7 +11,7 @@
 
 package com.loc8r.seattleexplorer.domain.base
 
-import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
+import com.loc8r.seattleexplorer.domain.interfaces.ObservingThreadInterface
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers
 abstract class CompletableUseCaseBase<in Params> constructor(
     // an abstraction for the schedule thread for each observable
     // required in the constructor
-    private val observingThread: ObservingThread) {
+    private val observingThread: ObservingThreadInterface) {
 
     // A reference to the disposable observable, so we can dispose of it
     private val disposables = CompositeDisposable()

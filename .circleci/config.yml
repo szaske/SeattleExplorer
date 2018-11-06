@@ -13,6 +13,24 @@ references:
       name: Decode Google Services JSON
       command: echo $GOOGLE_SERVICES | base64 -di > app/google-services.json
 
+  export_key_props: &export_key_props
+    run:
+      name: Export keystore.properties environment variable
+      command: echo 'export KEYSTORE_PROPERTIES="$KEYSTORE_PROPERTIES"' >> $BASH_ENV
+  decode_key_props: &decode_key_props
+    run:
+      name: Decode keystore.properties
+      command: echo $KEYSTORE_PROPERTIES | base64 -di > keystore.properties
+
+  export_debug_keystore: &export_debug_keystore
+    run:
+      name: Export debug.keystore environment variable
+      command: echo 'export DEBUG_KEYSTORE="$DEBUG_KEYSTORE"' >> $BASH_ENV
+  decode_debug_keystore: &decode_debug_keystore
+    run:
+      name: Decode debug.keystore
+      command: echo $DEBUG_KEYSTORE | base64 -di > debug.keystore
+
 jobs:
   build:
     working_directory: ~/code
@@ -36,6 +54,10 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - *export_gservices_json
       - *decode_gservices_json
+      - *export_key_props
+      - *decode_key_props
+      - *export_debug_keystore
+      - *decode_debug_keystore
       - run:
           name: Run Tests
           command: ./gradlew lint test

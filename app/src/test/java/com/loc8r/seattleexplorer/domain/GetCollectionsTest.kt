@@ -1,7 +1,7 @@
 package com.loc8r.seattleexplorer.domain
 
-import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
-import com.loc8r.seattleexplorer.domain.interfaces.ObservingThread
+import com.loc8r.seattleexplorer.domain.interfaces.DomainRepositoryInterface
+import com.loc8r.seattleexplorer.domain.interfaces.ObservingThreadInterface
 import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.utils.TestDataFactory
 import com.nhaarman.mockitokotlin2.mock
@@ -10,8 +10,8 @@ import io.reactivex.Observable
 import org.junit.Test
 
 class GetCollectionsTest {
-    private val repository = mock<DomainRepository>()
-    private val observingThread = mock<ObservingThread>()
+    private val repository = mock<DomainRepositoryInterface>()
+    private val observingThread = mock<ObservingThreadInterface>()
 
     private val getCollections = GetCollections(repository,observingThread)
 

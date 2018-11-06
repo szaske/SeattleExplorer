@@ -1,7 +1,7 @@
 package com.loc8r.seattleexplorer.di.modules
 
-import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
-import com.loc8r.seattleexplorer.repository.DataRepository
+import com.loc8r.seattleexplorer.domain.interfaces.DomainRepositoryInterface
+import com.loc8r.seattleexplorer.repository.DataRepositoryInterface
 import dagger.Binds
 import dagger.Module
 
@@ -9,5 +9,5 @@ import dagger.Module
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindsDataRepository(dataRepository: DataRepository): DomainRepository
+    abstract fun bindsDataRepository(dataRepository: DataRepositoryInterface): DomainRepositoryInterface
 }

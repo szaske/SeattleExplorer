@@ -1,8 +1,23 @@
+/**
+ * The ViewModel class is designed to store and manage UI-related data in a lifecycle conscious way.
+ * The ViewModel class allows data to survive configuration changes such as screen rotations.
+ *
+ * Stuff that should go here:
+ *
+ * Data that needs to survive the Activity and Fragment lifecycle
+ *
+ * Caution: A ViewModel must never reference a view, Lifecycle, or any class that may hold a
+ * reference to the activity context.
+ */
+
 package com.loc8r.seattleexplorer.presentation
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+import com.loc8r.seattleexplorer.auth.interfaces.AuthInterface
 import com.loc8r.seattleexplorer.domain.GetCollections
 import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.RefreshAll
@@ -14,36 +29,37 @@ import com.loc8r.seattleexplorer.presentation.utils.PresentationMapper
 import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 open class SharedViewModel @Inject constructor(
+        private val authService: AuthInterface,
         private val getCollections: GetCollections,
         private val getPois: GetPois,
         private val refreshAll: RefreshAll,
         private val mapper: PresentationMapper
 ): ViewModel() {
 
-
     private val poiData: MutableLiveData<Resource<List<PoiPresentation>>> = MutableLiveData()
-
     private val colData: MutableLiveData<Resource<List<CollectionPresentation>>> = MutableLiveData()
 
-
-    // initializer block, see: https://kotlinlang.org/docs/reference/classes.html
-    init {
-        // fetchAllPois()
-        // fetchAllCollections()
-    }
-
     fun isUserAuthenticated(): Boolean {
-        return true
+        return authService.getUser() != null
     }
 
+    fun getUserEmail(): String{
+        return authService.getUser()?.email ?: ""
+    }
+
+    fun signInWithEmail(email: String, password: String, onResult: (Task<AuthResult>) -> Unit) {
+        return authService.signIn(email,password,onResult)
+    }
+
+    fun signOut(onResult: () -> Unit) {
+        return authService.signOut(onResult)
+    }
 
     fun getAllCollections(): LiveData<Resource<List<CollectionPresentation>>> {
         return colData
