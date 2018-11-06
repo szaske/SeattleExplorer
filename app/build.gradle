@@ -6,9 +6,7 @@ apply plugin: 'kotlin-kapt'
 android {
     signingConfigs {
         SeattleExplorer {
-            storeFile file('D:/projects/android/keystore/debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
+            // blank and filled in via project build.gradle
         }
     }
     compileSdkVersion rootProject.compileSdkVersion
