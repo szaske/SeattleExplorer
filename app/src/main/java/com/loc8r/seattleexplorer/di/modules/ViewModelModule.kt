@@ -18,17 +18,6 @@ internal abstract class ViewModelModule {
     @ViewModelKey(SharedViewModel::class)
     abstract fun bindSharedViewModel(viewModel: SharedViewModel): ViewModel
 
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(PoiListViewModel::class)
-//    abstract fun bindPoiDetailViewModel(viewModel: PoiListViewModel): ViewModel
-
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(CollectionsListViewModel::class)
-//    abstract fun bindCollectionsListViewModel(viewModel: CollectionsListViewModel): ViewModel
-
-
     // Because I want to use my own View model factory instead of the default one, I need to tell
     // Dagger to inject the ViewModelFactory whenever a inject ViewModelFactory is requested
     @Binds

@@ -2,6 +2,6 @@ package com.loc8r.seattleexplorer.domain.interfaces
 
 import io.reactivex.Scheduler
 
-interface ObservingThread {
+interface ObservingThreadInterface {
     val scheduler: Scheduler
 }

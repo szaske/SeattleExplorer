@@ -2,6 +2,7 @@ package com.loc8r.seattleexplorer.presentation
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.loc8r.seattleexplorer.auth.interfaces.AuthInterface
 import com.loc8r.seattleexplorer.domain.GetCollections
 import com.loc8r.seattleexplorer.domain.GetPois
 import com.loc8r.seattleexplorer.domain.RefreshAll
@@ -27,6 +28,7 @@ class SharedViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     //Mock objects needed to instantiate the class under test
+    private val mockAuthService = mock<AuthInterface>()
     private val mockGetPois = mock<GetPois>()
     private val mockGetCollections = mock<GetCollections>()
     private val mockRefreshAll = mock<RefreshAll>()
@@ -42,7 +44,7 @@ class SharedViewModelTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler {
             _ -> Schedulers.trampoline()
         }
-        sharedViewModel = SharedViewModel(mockGetCollections,mockGetPois,mockRefreshAll,mockMapper)
+        sharedViewModel = SharedViewModel(mockAuthService, mockGetCollections,mockGetPois,mockRefreshAll,mockMapper)
     }
 
 

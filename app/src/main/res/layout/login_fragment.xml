@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 <android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/emailInput"
+        android:id="@+id/login_et_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -23,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/passwordInput"
+        android:id="@+id/login_et_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -34,10 +32,10 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailInput"/>
+        app:layout_constraintTop_toBottomOf="@id/login_et_email"/>
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/login_btn_login"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginEnd="32dp"
@@ -47,7 +45,7 @@
         android:text="@string/log_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"/>
+        app:layout_constraintTop_toBottomOf="@id/login_et_password"/>
 
     <TextView
         android:id="@+id/testText"
@@ -55,8 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/signup_link"
-        app:layout_constraintEnd_toEndOf="@+id/loginButton"
-        app:layout_constraintStart_toStartOf="@+id/loginButton"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+        app:layout_constraintEnd_toEndOf="@+id/login_btn_login"
+        app:layout_constraintStart_toStartOf="@+id/login_btn_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_login" />
+
+
 </android.support.constraint.ConstraintLayout>
-</ScrollView>

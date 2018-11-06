@@ -1,19 +1,18 @@
 package com.loc8r.seattleexplorer.repository
 
-import com.loc8r.seattleexplorer.domain.interfaces.DomainRepository
+import com.loc8r.seattleexplorer.domain.interfaces.DomainRepositoryInterface
 import com.loc8r.seattleexplorer.domain.models.CollectionDomain
 import com.loc8r.seattleexplorer.domain.models.PoiDomain
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-open class DataRepository @Inject constructor(
+open class DataRepositoryInterface @Inject constructor(
         private val cacheBroker: CacheDataStoreBroker,
         private val remoteBroker: RemoteDataStoreBroker,
-        private val mapper: RepositoryMapper): DomainRepository{
+        private val mapper: RepositoryMapper): DomainRepositoryInterface{
 
     override fun getPois(): Observable<List<PoiDomain>> {
 

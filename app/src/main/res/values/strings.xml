@@ -26,4 +26,6 @@
     <string name="welcome_description">Welcome Description</string>
     <string name="home_button">To home</string>
     <string name="signup_link">Or signup...</string>
+    <string name="settings_menu_title">Settings</string>
+    <string name="logout_menu_title">logout</string>
 </resources>

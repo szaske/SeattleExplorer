@@ -12,9 +12,16 @@
 
 package com.loc8r.seattleexplorer.presentation.interfaces
 
-import android.net.Uri
-
 interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    fun onFragmentInteraction(uri: Uri)
+    fun signInWithEmail(email: String, password: String)
+
+    fun setProgressBar(viewState: Int)
+
+    fun setGreyOut(viewState: Int)
+
+    fun hideKeyboard()
+
+    fun showSnackbar(s: String)
+
+    fun resetMenu()
 }

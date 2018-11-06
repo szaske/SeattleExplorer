@@ -1,7 +1,6 @@
 package com.loc8r.seattleexplorer.presentation.home
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -69,6 +68,10 @@ class HomeFragment : Fragment(), View.OnClickListener {
         // declare viewModel here
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -97,11 +100,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onDetach() {
         super.onDetach()
         listener = null
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
     }
 
     companion object {

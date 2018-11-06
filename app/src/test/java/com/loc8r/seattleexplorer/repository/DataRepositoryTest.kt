@@ -23,7 +23,7 @@ class DataRepositoryTest {
     private val mockMapper = mock<RepositoryMapper>()
 
     // Class under test
-    private val dataRepository = DataRepository(mockCacheDataStoreBroker,mockRemoteDataStoreBroker, mockMapper)
+    private val dataRepository = DataRepositoryInterface(mockCacheDataStoreBroker,mockRemoteDataStoreBroker, mockMapper)
 
     private fun stubCacheArePoisCached(areCached: Boolean) {
         whenever(mockCacheDataStoreBroker.arePoisCached())

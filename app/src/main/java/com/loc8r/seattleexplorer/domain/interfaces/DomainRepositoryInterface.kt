@@ -6,7 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface DomainRepository {
+interface DomainRepositoryInterface {
 
     fun getPois(): Observable<List<PoiDomain>>
 

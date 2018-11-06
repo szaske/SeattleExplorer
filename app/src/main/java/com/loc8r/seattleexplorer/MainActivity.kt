@@ -1,29 +1,34 @@
 package com.loc8r.seattleexplorer
 
+
 import android.arch.lifecycle.ViewModelProviders
-import android.net.Uri
+import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import androidx.navigation.NavGraph
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.main_activity.*
+import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
+
+class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
 
     // Here I'm injecting the viewModelFactory and NOT the viewModel
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var sharedViewModel: SharedViewModel
-
-    private lateinit var graph: NavGraph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         /**
@@ -37,32 +42,14 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
         // assigning the viewModel according to the map in the viewModelFactory
         sharedViewModel = ViewModelProviders.of(this,viewModelFactory).get(SharedViewModel::class.java)
 
-        //refresh all data by calling getAllCollections, getAllPois
-        sharedViewModel.refreshLocalCacheData()
-
-        // Setup the toolbar
         setupActionBar()
-
-        // Configure the navigation
-        setupNavigation()
-
     }
 
-    fun makeHomeStart(){
-        // setup navigation
-        graph.startDestination = R.id.homeFragment
-    }
+    // Which fragments should show an up arrow?
+    private fun showUpArrow(id: Int): Boolean {
+        return id != R.id.homeFragment &&
+                id != R.id.loginFragment
 
-    private fun setupNavigation() {
-        val navHost = nav_host_fragment as NavHostFragment
-        graph = navHost.navController
-                .navInflater.inflate(R.navigation.nav_graph)
-        graph.startDestination = R.id.welcomeFragment
-
-        // This seems to be a magical command. Not sure why it's needed :(
-        navHost.navController.graph = graph
-
-        NavigationUI.setupActionBarWithNavController(this, navHost.navController)
     }
 
     override fun onStart() {
@@ -79,6 +66,9 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
          *
          */
         super.onStart()
+        if(!sharedViewModel.isUserAuthenticated()) {
+            Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.loginFragment)
+        }
     }
 
     override fun onStop() {
@@ -89,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
          *
          */
         super.onStop()
-
+        // the Login onComplete listener is automatically removed
     }
 
     /**
@@ -97,19 +87,112 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener {
      * Using the support library's toolbar helps ensure that your app will have consistent behavior
      * across the widest range of devices
      */
-    fun setupActionBar(){
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+    private fun setupActionBar(){
+        val toolbar = findViewById<Toolbar>(R.id.main_tbar_toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).addOnNavigatedListener { _, destination ->
+            val showUpArrow = showUpArrow(destination.id)
+            supportActionBar?.setDisplayHomeAsUpEnabled(showUpArrow)
+            supportActionBar?.setHomeButtonEnabled(showUpArrow)
+            supportActionBar?.title = destination.label
+        }
     }
 
 
     // This enables the up arrow on the toolbar when navigating to a child fragment
     override fun onSupportNavigateUp(): Boolean {
-        return Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp()
+        return Navigation.findNavController(this, R.id.main_fr_nav_host_fragment).navigateUp()
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        // show or hide logout menu item
+        menu.findItem(R.id.menu_logout).isVisible = sharedViewModel.isUserAuthenticated()
+        return true
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_logout -> {
+                Timber.d("Logout item selected")
+                signOutUser()
+            }
+            R.id.menu_settings -> {
+                Timber.d("Settings item selected")
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // Starts the signin via email process
+    override fun signInWithEmail(email: String, password: String) {
+        setProgressBar(View.VISIBLE)
+        hideKeyboard()
+        setGreyOut(View.VISIBLE)
+        sharedViewModel.signInWithEmail(email,password) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                onSignInUserSuccess()
+                Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.homeFragment)
+            } else {
+                // If sign in fails, display a message to the user.
+                onSignInUserFailure()
+                Timber.w("signInWithEmail:failure ${task.exception}")
+            }
+        }
+    }
+
+    private  fun onSignInUserSuccess(){
+        invalidateOptionsMenu() // shows logout option
+        setProgressBar(View.GONE)
+        setGreyOut(View.GONE)
+        showSnackbar("Welcome back, ${sharedViewModel.getUserEmail()}")
+        Timber.i("User: ${sharedViewModel.getUserEmail()} logged in.")
+    }
+
+    private  fun onSignInUserFailure(){
+        setProgressBar(View.GONE)
+        setGreyOut(View.GONE)
+        showSnackbar("Authentication failed")
+    }
+
+    private fun signOutUser(){
+        //authService.signOut()
+        sharedViewModel.signOut {
+            invalidateOptionsMenu() // So login is not visible at sign in page
+            Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.loginFragment)
+        }
+    }
+
+    override fun resetMenu() = invalidateOptionsMenu()
+
+    override fun setProgressBar(viewState: Int){
+            main_pb_login.visibility = viewState
+    }
+
+    override fun setGreyOut(viewState: Int){
+        main_vw_greyOut.visibility = viewState
+    }
+
+    override fun hideKeyboard(){
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    override fun showSnackbar(s: String) {
+        // val view = window.decorView.rootView
+        val view = findViewById<View>(R.id.main_ll_container)
+        val snack = Snackbar.make(view, s, Snackbar.LENGTH_LONG)
+        val sbview = snack.view
+
+        val lp = sbview.layoutParams as FrameLayout.LayoutParams
+        lp.setMargins(lp.leftMargin+10,lp.topMargin,lp.bottomMargin+10,lp.bottomMargin+10)
+        sbview.layoutParams = lp
+        snack.show()
+    }
+
 }
