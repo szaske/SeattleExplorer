@@ -5,11 +5,11 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 
 interface AuthInterface {
-    fun signIn(email: String, password: String, onResult: (Task<AuthResult>) -> Unit)
+    fun signIn(email: String, password: String, onResult: (Boolean,String) -> Unit)
 
     fun signOut(onResult: () -> Unit)
 
-    fun register(email: String, password: String, userName: String, onResult: (Boolean) -> Unit)
+    fun register(email: String, password: String, name: String, onResult: (Boolean, String) -> Unit)
 
     fun getUser(): FirebaseUser?
 }

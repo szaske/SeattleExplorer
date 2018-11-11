@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.jaredsburrows.spoon"
 
 android {
     signingConfigs {
@@ -42,6 +43,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    spoon {
+        // for debug output
+        debug = true
+
+        // To run a single test class
+        //className = 'com.example.espressorobot.DenemeTest'
+
+        // To run a single method in TestCase
+        //methodName = 'testMyApp'
+
+        // To execute the tests device by device */
+        //sequential = true
+
+        // To grant permissions to Android M >= devices */
+        //grantAllPermissions = true
+    }
 }
 
 dependencies {
@@ -58,7 +75,6 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"
-    // implementation "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
 
     //DI
@@ -94,7 +110,11 @@ dependencies {
     testImplementation "android.arch.core:core-testing:$archTestingVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin2Version"
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.squareup.spoon:spoon-client:$spoonClientVersion"
+    androidTestImplementation "com.jraska:falcon-spoon-compat:$falconSpoonVerison"
+    implementation "com.jraska:falcon:$falconVersion"
 
     // Cache testing
     testImplementation "android.arch.persistence.room:testing:$roomVersion"

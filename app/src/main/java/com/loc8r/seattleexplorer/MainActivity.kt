@@ -13,7 +13,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import com.loc8r.seattleexplorer.R.anim.slide_in_left
+import com.loc8r.seattleexplorer.R.id.homeFragment
+import com.loc8r.seattleexplorer.R.id.loginFragment
 import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
@@ -66,9 +71,7 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
          *
          */
         super.onStart()
-        if(!sharedViewModel.isUserAuthenticated()) {
-            Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.loginFragment)
-        }
+
     }
 
     override fun onStop() {
@@ -125,43 +128,48 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
         return super.onOptionsItemSelected(item)
     }
 
-    // Starts the signin via email process
-    override fun signInWithEmail(email: String, password: String) {
-        setProgressBar(View.VISIBLE)
-        hideKeyboard()
-        setGreyOut(View.VISIBLE)
-        sharedViewModel.signInWithEmail(email,password) { task ->
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                onSignInUserSuccess()
-                Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.homeFragment)
-            } else {
-                // If sign in fails, display a message to the user.
-                onSignInUserFailure()
-                Timber.w("signInWithEmail:failure ${task.exception}")
-            }
-        }
-    }
-
-    private  fun onSignInUserSuccess(){
+    override fun onSignInUserSuccess(){
         invalidateOptionsMenu() // shows logout option
         setProgressBar(View.GONE)
         setGreyOut(View.GONE)
-        showSnackbar("Welcome back, ${sharedViewModel.getUserEmail()}")
-        Timber.i("User: ${sharedViewModel.getUserEmail()} logged in.")
+        showSnackbar("Welcome back, ${sharedViewModel.getUserName()}")
+        Timber.i("User: ${sharedViewModel.getUserName()} logged in.")
     }
 
-    private  fun onSignInUserFailure(){
+    override fun onRegistrationSuccess(){
+        invalidateOptionsMenu() // shows logout option
         setProgressBar(View.GONE)
         setGreyOut(View.GONE)
-        showSnackbar("Authentication failed")
+        showSnackbar("Welcome ${sharedViewModel.getUserName()}")
+        Timber.i("User: ${sharedViewModel.getUserName()} registered.")
+    }
+
+    override fun onSignInUserFailure(error: String){
+        setProgressBar(View.GONE)
+        setGreyOut(View.GONE)
+        showSnackbar(error)
+    }
+
+    override fun onRegistrationFailure(error: String){
+        setProgressBar(View.GONE)
+        setGreyOut(View.GONE)
+        showSnackbar(error)
     }
 
     private fun signOutUser(){
-        //authService.signOut()
         sharedViewModel.signOut {
             invalidateOptionsMenu() // So login is not visible at sign in page
-            Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(R.id.loginFragment)
+
+        // clearing the back stack on navigation
+        findNavController(this,R.id.main_fr_nav_host_fragment)
+                .navigate(loginFragment,
+                        null,
+                        NavOptions.Builder()
+                                .setEnterAnim(slide_in_left)
+                                .setPopUpTo(homeFragment,
+                                        true)
+                                .build()
+                )
         }
     }
 
@@ -184,7 +192,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
     }
 
     override fun showSnackbar(s: String) {
-        // val view = window.decorView.rootView
         val view = findViewById<View>(R.id.main_ll_container)
         val snack = Snackbar.make(view, s, Snackbar.LENGTH_LONG)
         val sbview = snack.view
@@ -194,5 +201,4 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
         sbview.layoutParams = lp
         snack.show()
     }
-
 }

@@ -20,7 +20,6 @@ import com.loc8r.seattleexplorer.presentation.utils.Resource
 import com.loc8r.seattleexplorer.presentation.utils.ResourceState
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.collections_list_fragment.*
-import kotlinx.android.synthetic.main.poi_list_fragment.*
 import javax.inject.Inject
 
 class CollectionsListFragment : Fragment() {

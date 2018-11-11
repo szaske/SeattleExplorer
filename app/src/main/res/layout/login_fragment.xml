@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,52 +9,74 @@
         android:id="@+id/login_et_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
-        android:hint="@string/email_hint"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
         android:autofillHints="no"
+        android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/login_et_password"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/login_et_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
-        android:hint="@string/password_hint"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
         android:autofillHints="password"
+        android:hint="@string/password_hint"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/login_btn_login"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_et_email"/>
+        app:layout_constraintTop_toBottomOf="@+id/login_et_email" />
 
     <Button
         android:id="@+id/login_btn_login"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="32dp"
         android:gravity="center"
         android:text="@string/log_in_button"
+        app:layout_constraintBottom_toTopOf="@+id/login_tv_or"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_et_password"/>
+        app:layout_constraintTop_toBottomOf="@+id/login_et_password" />
 
     <TextView
-        android:id="@+id/testText"
+        android:id="@+id/login_tv_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/signup_link"
+        android:layout_marginTop="14dp"
+        android:text="@string/login_or"
+        app:layout_constraintBottom_toTopOf="@+id/login_btn_create_account"
         app:layout_constraintEnd_toEndOf="@+id/login_btn_login"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/login_btn_login"
         app:layout_constraintTop_toBottomOf="@+id/login_btn_login" />
+
+    <Button
+        android:id="@+id/login_btn_create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="@string/create_act_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_or" />
 
 
 </android.support.constraint.ConstraintLayout>

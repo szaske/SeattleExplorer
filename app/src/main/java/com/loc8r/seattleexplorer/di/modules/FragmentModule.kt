@@ -8,6 +8,7 @@ import com.loc8r.seattleexplorer.presentation.collectionsList.CollectionsListFra
 import com.loc8r.seattleexplorer.presentation.home.HomeFragment
 import com.loc8r.seattleexplorer.presentation.login.LoginFragment
 import com.loc8r.seattleexplorer.presentation.poiList.PoiListFragment
+import com.loc8r.seattleexplorer.presentation.register.RegisterFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -26,5 +27,7 @@ abstract class FragmentModule {
     @ContributesAndroidInjector
     abstract fun contributesLoginFragment(): LoginFragment
 
+    @ContributesAndroidInjector
+    abstract fun contributesRegisterFragment(): RegisterFragment
 
 }
