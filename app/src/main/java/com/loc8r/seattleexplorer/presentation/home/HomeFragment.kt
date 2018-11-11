@@ -1,5 +1,6 @@
 package com.loc8r.seattleexplorer.presentation.home
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,11 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.loc8r.seattleexplorer.R
+import com.loc8r.seattleexplorer.di.ViewModelFactory
+import com.loc8r.seattleexplorer.presentation.SharedViewModel
 import com.loc8r.seattleexplorer.presentation.interfaces.OnFragmentInteractionListener
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.home_fragment.*
+import javax.inject.Inject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +39,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var sharedViewModel: SharedViewModel
+
 
     lateinit var navController: NavController
 
@@ -65,11 +75,24 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // declare viewModel here
+        // assigning the viewModel according to the map in the viewModelFactory
+        sharedViewModel = ViewModelProviders.of(activity!!,viewModelFactory).get(SharedViewModel::class.java)
     }
 
     override fun onStart() {
         super.onStart()
+        if(!sharedViewModel.isUserAuthenticated()) {
+            // Navigation.findNavController(this,R.id.main_fr_nav_host_fragment).navigate(loginFragment)
+
+            navController
+                    .navigate(R.id.loginFragment,
+                            null,
+                            NavOptions.Builder()
+                                    .setPopUpTo(R.id.homeFragment,
+                                            true)
+                                    .build()
+                    )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

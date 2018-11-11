@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.loc8r.seattleexplorer.di.ViewModelFactory
 import com.loc8r.seattleexplorer.presentation.SharedViewModel
+import com.loc8r.seattleexplorer.presentation.login.LoginViewModel
+import com.loc8r.seattleexplorer.presentation.register.RegisterViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -12,6 +14,16 @@ import kotlin.reflect.KClass
 
 @Module
 internal abstract class ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun bindLoginViewModel(viewModel: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RegisterViewModel::class)
+    abstract fun bindRegisterViewModel(viewModel: RegisterViewModel): ViewModel
 
     @Binds
     @IntoMap

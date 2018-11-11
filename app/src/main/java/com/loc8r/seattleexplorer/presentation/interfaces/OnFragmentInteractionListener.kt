@@ -13,7 +13,7 @@
 package com.loc8r.seattleexplorer.presentation.interfaces
 
 interface OnFragmentInteractionListener {
-    fun signInWithEmail(email: String, password: String)
+    // fun signInWithEmail(email: String, password: String)
 
     fun setProgressBar(viewState: Int)
 
@@ -24,4 +24,13 @@ interface OnFragmentInteractionListener {
     fun showSnackbar(s: String)
 
     fun resetMenu()
+
+    fun onSignInUserSuccess()
+
+    fun onSignInUserFailure(error: String)
+
+    fun onRegistrationSuccess()
+
+    fun onRegistrationFailure(error: String)
+
 }
