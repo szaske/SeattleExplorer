@@ -5,6 +5,9 @@ import com.loc8r.seattleexplorer.auth.interfaces.AuthInterface
 import com.loc8r.seattleexplorer.auth.models.UserRegistration
 import javax.inject.Inject
 
+
+const val INVALID_REGISTER_ERROR_MESSAGE = "Invalid registration request"
+
 class RegisterViewModel @Inject constructor(
         private val authService: AuthInterface
 ): ViewModel(){
@@ -17,7 +20,7 @@ class RegisterViewModel @Inject constructor(
             onResult(true, request, "")
         } else {
             // not a valid request show an error message
-            onResult(false, request, "Invalid registration Request")
+            onResult(false, request, INVALID_REGISTER_ERROR_MESSAGE)
         }
     }
 

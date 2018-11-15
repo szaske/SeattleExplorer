@@ -146,4 +146,46 @@ NavOptions.Builder()
 I hate the method name as it makes no sense to me, but what it does is it clears the back stack so you are not able to return to the named fragment.  Here's a list of the other work I accomplished in this step:
 * Validation. I added validation to both the login and registration fragments. I wasn't sure where to put the code and settled for putting it in the viewModel. Now I see why some Android developers worry about the viewModel housing too much code.
 * Split ViewModel. Once I added validation it became clear to me that my approach of using a shared ViewModel was not a good one.  it was just getting too messy. So I ended up splitting up the viewmodel again.
-* Began Instrumented Testing. Now that I've added UI that user actually interact with I needed to start thinking about UI testing. I began to implement automated tests using the [robot design pattern](https://academy.realm.io/posts/kau-jake-wharton-testing-robots/) created by Jack 'I create all the good stuff' Wharton but quickly realized that this would be too much for one step. So I'll stop here, check in my changes and leave instrumented tests for my next step.
+* Began Instrumented Testing. Now that I've added UI that user actually interact with I needed to start thinking about UI testing. I began to implement automated tests using the [robot design pattern](https://academy.realm.io/posts/kau-jake-wharton-testing-robots/) created by Jake 'I create all the good stuff' Wharton but quickly realized that this would be too much for one step. So I'll stop here, check in my changes and leave instrumented tests for my next step.
+
+**Step #22. Instrumentation Tests.** As mentioned previously in this step I added instrumentation tests for the Login and Registration fragments. To accomplish this I relied on several key testing libraries and tools:
+
+* Spoon. An excellent automation tool developed by Square. Spoon is a distributed instrumentation tool that runs your tests on multiple devices simultaneously, takes screenshots and records the logcat for each device.
+* Falcon. An improved screenshot tool that is able to capture dialog boxes and snackbars.
+* Android Test Orchestrator. When I started using Espresso it quickly became apparent why so many devs aren't fans of it. Writing tests is pretty straight forward, but you can quickly run into aggravating road blocks. One of the first I ran into was "how would I ensure my tests all started with the same state?" Login is a good example here. If I wrote a test that logged a user in, at the end of that instrumented test the user would stay logged in. The second time you run this test it will fail because the user would already be logged in. This is the opposite that happens with unit tests and can be frustrating. Android Test Orchestrator solves this problem. It ensures that after each test the app is refreshed to a clean state. Once the dependency was install I just needed to add `execution 'ANDROID_TEST_ORCHESTRATOR'` to the testOptions in my app build.gradle file.
+
+The robot pattern makes tests very readable and I'm really liking the pattern. You start by creating a BaseTestRobot class that includes some basic functions like clickButton and selectMenuItem. Then for each UI screen you create a specific "robot" class. This class is specifically for testing that one screen and contains specific functions for exercising each view/control in the UI.
+
+Perhaps the most difficult aspect of Espresso testing is finding a way to handle asynchronous activities. Espresso has no way of knowing when the app is waiting for a network call or in my case when the app is waiting for a Firebase callback. This is especially important when testing the Login and Registration UI as Espresso will not wait and crash when it tries to interact with UI that has not yet been created. Google created a solution for this called IdlingResource, but the documentation for this class is slight to say the least. StackOverflow was also unfortunately not very helpful giving multiple complex and out-dated responses on how to implement a IdlingResource class. My solution required that I add functions to the Activity and SharedViewModel, functions only needed for testing purposes. That rubs me the wrong way, but in the end I do believe it's the best approach and the code was minor. I created a new state variable in the SharedViewModel called `progress`. This boolean keeps track of when the user is waiting for an asynchronous network call. Since I already display a progressbar it was fairly easy to map this boolean to the state of the progressbar. Then I just needed to create my own IdlingResource class that mapped this variable to the isIdleNow function. Here is that code:
+
+```
+import android.support.test.espresso.IdlingResource
+import com.loc8r.seattleexplorer.MainActivity
+
+class RegisterIdlingResource constructor(
+        private val mainActivity: MainActivity
+) : IdlingResource{
+
+    private var resourceCallback: IdlingResource.ResourceCallback? = null
+
+    override fun getName(): String {
+        return RegisterIdlingResource::class.java.name
+    }
+
+    override fun isIdleNow(): Boolean {
+        return !mainActivity.isInProgress()
+    }
+
+    override fun registerIdleTransitionCallback(callback: IdlingResource.ResourceCallback?) {
+        this.resourceCallback = callback
+    }
+}
+```
+
+Finally I needed to register this class before each instrumented test, which I accomplished by adding
+
+```
+IdlingRegistry.getInstance().register(RegisterIdlingResource(activity))
+```
+
+to my @Before function. With this in place Espresso becomes smarter and waits for asynchronous activities to complete before continuing the test steps.

@@ -12,10 +12,13 @@ import android.support.test.espresso.matcher.BoundedMatcher
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.Toolbar
-import com.jraska.falcon.FalconSpoonRule
+import android.view.View
+import android.view.ViewGroup
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
+import org.hamcrest.TypeSafeMatcher
 
 
 open class BaseTestRobot {
@@ -29,10 +32,23 @@ open class BaseTestRobot {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
     }
 
+    fun pressBack() {
+        onView(isRoot()).perform(ViewActions.pressBack())
+    }
+
     fun selectMenuItem(menuString: String){
         onView(withText(menuString))
                 .perform(click())
     }
+
+    fun checkMenuItemDoesntExist(menuString: String){
+        onView(withText(menuString)).check(ViewAssertions.doesNotExist())
+    }
+
+    fun checkMenuItemExist(menuString: String){
+        onView(withText(menuString)).check(matches(isDisplayed()))
+    }
+
 
     fun textView(resId: Int): ViewInteraction = onView(withId(resId))
 
@@ -47,20 +63,18 @@ open class BaseTestRobot {
                 .atPosition(position).perform(ViewActions.click())
     }
 
-    fun checkSnackBarDisplayedByMessage(@StringRes message: Int) {
+    fun checkSnackBarDisplayedByMessageId(@StringRes message: Int) {
         onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(message)))
                 .check(matches(withEffectiveVisibility(
                         ViewMatchers.Visibility.VISIBLE
                 )))
     }
 
-    fun sleep() = apply {
-        Thread.sleep(500)
-    }
-
-    fun screenShot(rule: FalconSpoonRule, tag: String) {
-        sleep()
-        TestUtils.screenShot(rule, tag)
+    fun checkSnackBarDisplayedByMessageString(message: String) {
+        onView(withText(message))
+                .check(matches(withEffectiveVisibility(
+                        ViewMatchers.Visibility.VISIBLE
+                )))
     }
 
     fun matchToolbarTitle(
@@ -73,7 +87,7 @@ open class BaseTestRobot {
             textMatcher: Matcher<CharSequence>): Matcher<Any> {
         return object : BoundedMatcher<Any, Toolbar>(Toolbar::class.java!!) {
             public override fun matchesSafely(toolbar: Toolbar): Boolean {
-                return textMatcher.matches(toolbar.getTitle())
+                return textMatcher.matches(toolbar.title)
             }
 
             override fun describeTo(description: Description) {
@@ -82,4 +96,34 @@ open class BaseTestRobot {
             }
         }
     }
+
+    fun pressHomeUp(){
+        onView(
+                Matchers.allOf(ViewMatchers.withContentDescription("Navigate up"),
+                        childAtPosition(
+                                Matchers.allOf(ViewMatchers.withId(R.id.main_tbar_toolbar),
+                                        childAtPosition(
+                                                ViewMatchers.withId(R.id.main_ll_container),
+                                                0)),
+                                2),
+                        ViewMatchers.isDisplayed())).perform(ViewActions.click())
+    }
+
+    private fun childAtPosition(
+            parentMatcher: Matcher<View>, position: Int): Matcher<View> {
+
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("Child at position $position in parent ")
+                parentMatcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                val parent = view.parent
+                return parent is ViewGroup && parentMatcher.matches(parent)
+                        && view == parent.getChildAt(position)
+            }
+        }
+    }
+
 }

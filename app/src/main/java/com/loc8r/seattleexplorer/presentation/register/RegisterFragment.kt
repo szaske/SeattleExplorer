@@ -92,8 +92,6 @@ class RegisterFragment : Fragment(), View.OnClickListener {
             when (it) {
                 register_btn_register -> {
                     interactionListener?.hideKeyboard()
-                    interactionListener?.setGreyOut(View.VISIBLE)
-                    interactionListener?.setProgressBar(View.VISIBLE)
                     validateRegisterForm(register_et_email.text.toString(),
                             register_et_password.text.toString(),
                             register_et_name.text.toString())
@@ -119,14 +117,13 @@ class RegisterFragment : Fragment(), View.OnClickListener {
     }
 
     private fun registerWithEmail(userRegistration: UserRegistration) {
+        interactionListener?.setInProgress(true)
         registerViewModel.register(userRegistration.email, userRegistration.password, userRegistration.name) {isRegistered, errorMessage ->
             if(isRegistered){
-                // user created in viewmodel
-
                 // now login in user since it doesn't happen automatically
                 registerViewModel.signInWithEmail(userRegistration.email,userRegistration.password) { OnSignInSuccess ->
                     if(OnSignInSuccess){
-                        interactionListener?.onSignInUserSuccess()
+
                         navController
                                 .navigate(R.id.action_registerFragment_to_homeFragment,
                                         null,
@@ -135,8 +132,10 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                                                         true)
                                                         .build()
                                 )
+                        interactionListener?.onRegistrationSuccess()
                     } else {
                         navController.navigate(action_registerFragment_to_loginFragment)
+                        interactionListener?.setInProgress(false)
                     }
                 }
 
@@ -144,9 +143,8 @@ class RegisterFragment : Fragment(), View.OnClickListener {
             } else {
                 // there was a problem
                 interactionListener?.showSnackbar(errorMessage)
+                interactionListener?.setInProgress(false)
             }
-            interactionListener?.setGreyOut(View.GONE)
-            interactionListener?.setProgressBar(View.GONE)
         }
     }
 }

@@ -54,6 +54,14 @@ class ExplorerAuthImpl @Inject constructor(
 
     override fun getUser(): FirebaseUser? = authService.currentUser
 
+    override fun deleteUser(user: FirebaseUser) {
+        user?.delete()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Timber.d("User account deleted.")
+            }
+        }
+    }
+
     override fun signOut(onResult: () -> Unit) {
         authService.signOut()
         onResult()

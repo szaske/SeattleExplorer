@@ -11,7 +11,7 @@
         tools:layout="@layout/poi_list_fragment"/>
     <fragment
         android:id="@+id/homeFragment"
-        android:label="Home"
+        android:label="@string/home_fragment_title"
         android:name="com.loc8r.seattleexplorer.presentation.home.HomeFragment"
         tools:layout="@layout/home_fragment">
         <action
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.loc8r.seattleexplorer.presentation.login.LoginFragment"
-        android:label="loginFragment"
+        android:label="@string/login_fragment_title"
         tools:layout="@layout/login_fragment" >
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -56,7 +56,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.loc8r.seattleexplorer.presentation.register.RegisterFragment"
-        android:label="register_fragment"
+        android:label="@string/register_fragment_title"
         tools:layout="@layout/register_fragment" >
         <action
             android:id="@+id/action_registerFragment_to_homeFragment"

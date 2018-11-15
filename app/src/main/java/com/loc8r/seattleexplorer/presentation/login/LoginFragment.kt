@@ -44,7 +44,6 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     private var interactionListener: OnFragmentInteractionListener? = null
 
-
     companion object {
         fun newInstance() = LoginFragment()
     }
@@ -134,6 +133,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
     }
 
     private fun signInUser(request: UserSignIn){
+        interactionListener?.setInProgress(true)
         loginViewModel.signInWithEmail(request.email, request.password) { isSuccessful, serviceMessage->
             if(isSuccessful){
                 // Prep the activity

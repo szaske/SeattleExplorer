@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
         }
     }
 
-
     // This enables the up arrow on the toolbar when navigating to a child fragment
     override fun onSupportNavigateUp(): Boolean {
         return Navigation.findNavController(this, R.id.main_fr_nav_host_fragment).navigateUp()
@@ -129,58 +128,62 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
     }
 
     override fun onSignInUserSuccess(){
-        invalidateOptionsMenu() // shows logout option
-        setProgressBar(View.GONE)
-        setGreyOut(View.GONE)
-        showSnackbar("Welcome back, ${sharedViewModel.getUserName()}")
+        resetMenu() // shows logout option
+        val res = resources
+        val message = String.format(res.getString(R.string.welcome_returning_message), sharedViewModel.getUserName())
+        showSnackbar(message)
         Timber.i("User: ${sharedViewModel.getUserName()} logged in.")
+        setInProgress(false)
     }
 
-    override fun onRegistrationSuccess(){
-        invalidateOptionsMenu() // shows logout option
-        setProgressBar(View.GONE)
-        setGreyOut(View.GONE)
-        showSnackbar("Welcome ${sharedViewModel.getUserName()}")
-        Timber.i("User: ${sharedViewModel.getUserName()} registered.")
-    }
 
     override fun onSignInUserFailure(error: String){
-        setProgressBar(View.GONE)
-        setGreyOut(View.GONE)
+        setInProgress(false)
         showSnackbar(error)
     }
 
+    override fun onRegistrationSuccess(){
+        resetMenu() // shows logout option
+        showSnackbar("Welcome ${sharedViewModel.getUserName()}")
+        Timber.i("User: ${sharedViewModel.getUserName()} registered.")
+        setInProgress(false)
+    }
+
+
     override fun onRegistrationFailure(error: String){
-        setProgressBar(View.GONE)
-        setGreyOut(View.GONE)
+        setInProgress(false)
         showSnackbar(error)
     }
 
     private fun signOutUser(){
+        setInProgress(true)
         sharedViewModel.signOut {
             invalidateOptionsMenu() // So login is not visible at sign in page
 
-        // clearing the back stack on navigation
-        findNavController(this,R.id.main_fr_nav_host_fragment)
-                .navigate(loginFragment,
-                        null,
-                        NavOptions.Builder()
-                                .setEnterAnim(slide_in_left)
-                                .setPopUpTo(homeFragment,
-                                        true)
-                                .build()
-                )
+            // clearing the back stack on navigation
+            findNavController(this,R.id.main_fr_nav_host_fragment)
+                    .navigate(loginFragment,
+                            null,
+                            NavOptions.Builder()
+                                    .setEnterAnim(slide_in_left)
+                                    .setPopUpTo(homeFragment,
+                                            true)
+                                    .build()
+                    )
         }
+        setInProgress(false)
     }
 
-    override fun resetMenu() = invalidateOptionsMenu()
-
-    override fun setProgressBar(viewState: Int){
-            main_pb_login.visibility = viewState
+    fun isInProgress(): Boolean{
+        return sharedViewModel.isInProgress()
     }
 
-    override fun setGreyOut(viewState: Int){
-        main_vw_greyOut.visibility = viewState
+    fun resetMenu() = invalidateOptionsMenu()
+
+    override fun setInProgress(state: Boolean){
+        sharedViewModel.setInProgress(state)
+        main_pb_login.visibility = if (state) View.VISIBLE else View.GONE
+        main_vw_greyOut.visibility = if (state) View.VISIBLE else View.GONE
     }
 
     override fun hideKeyboard(){
@@ -200,5 +203,9 @@ class MainActivity : AppCompatActivity(), OnFragmentInteractionListener{
         lp.setMargins(lp.leftMargin+10,lp.topMargin,lp.bottomMargin+10,lp.bottomMargin+10)
         sbview.layoutParams = lp
         snack.show()
+    }
+
+    fun deleteCurrentUser(){
+        sharedViewModel.deleteUser()
     }
 }

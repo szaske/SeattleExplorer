@@ -9,6 +9,8 @@ interface AuthInterface {
 
     fun signOut(onResult: () -> Unit)
 
+    fun deleteUser(user: FirebaseUser)
+
     fun register(email: String, password: String, name: String, onResult: (Boolean, String) -> Unit)
 
     fun getUser(): FirebaseUser?
