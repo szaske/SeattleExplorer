@@ -13,17 +13,12 @@
 package com.loc8r.seattleexplorer.presentation.interfaces
 
 interface OnFragmentInteractionListener {
-    // fun signInWithEmail(email: String, password: String)
-
-    fun setProgressBar(viewState: Int)
-
-    fun setGreyOut(viewState: Int)
 
     fun hideKeyboard()
 
     fun showSnackbar(s: String)
 
-    fun resetMenu()
+    fun setInProgress(state: Boolean)
 
     fun onSignInUserSuccess()
 

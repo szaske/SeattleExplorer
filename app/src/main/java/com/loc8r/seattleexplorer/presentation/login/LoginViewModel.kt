@@ -12,7 +12,8 @@
  *
  * 1. Validation logic
  * 2. requests for "model" data
- * 3. conversion of model data for presentation purposes *
+ * 3. conversion of model data for presentation purposes
+ * 4. View state variables
  *
  */
 
@@ -27,19 +28,6 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
         private val authService: AuthInterface
         ): ViewModel() {
-
-
-    fun isUserAuthenticated(): Boolean {
-        return authService.getUser() != null
-    }
-
-    fun getUserEmail(): String{
-        return authService.getUser()?.email ?: ""
-    }
-
-    fun getUserName(): String{
-        return authService.getUser()?.displayName ?: ""
-    }
 
     fun validateSignInRequest(email: String, password: String , onResult: (Boolean, UserSignIn, String) -> Unit){
 
@@ -64,5 +52,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
 }

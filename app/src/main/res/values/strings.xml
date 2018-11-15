@@ -7,18 +7,20 @@
     <string name="collection_desc_placeholder">Description here</string>
 
     <!-- Login Fragment Strings -->
+    <string name="login_fragment_title">Login to Seattle Explorer</string>
     <string name="email_hint">email</string>
     <string name="password_hint">password</string>
     <string name="log_in_button">Log In</string>
     <string name="login_or">or</string>
+    <string name="welcome_returning_message">Welcome back %1$s</string>
 
     <!-- PoiList RecyclerView Strings -->
     <string name="poi_name_design_placeholder">Poi Name Here</string>
     <string name="poi_collection_design_placeholder">Collection Name</string>
     <string name="contentDesc_img">Point of Interest image</string>
 
-    <!-- Start Fragment Strings -->
-    <string name="home_fragment_title">Home Fragment String</string>
+    <!-- Home Fragment Strings -->
+    <string name="home_fragment_title">Seattle Explorer</string>
     <string name="to_poi_list_button_text">to POI List</string>
     <string name="to_col_list_button_text">To Collection List</string>
 
@@ -27,12 +29,13 @@
     <string name="logout_menu_title">logout</string>
 
     <!-- Register Fragment Strings -->
+    <string name="register_fragment_title">Create an account</string>
     <string name="register_name_hint">Name</string>
     <string name="register_email_hint">Email</string>
     <string name="register_button_text">Register</string>
-    <string name="register_title_text">Create an account</string>
     <string name="register_password_hint">Password</string>
     <string name="create_act_button">Create Account</string>
     <string name="auth_error_text">Authentication failed</string>
+
 
 </resources>

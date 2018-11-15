@@ -43,42 +43,33 @@ open class SharedViewModel @Inject constructor(
     private val poiData: MutableLiveData<Resource<List<PoiPresentation>>> = MutableLiveData()
     private val colData: MutableLiveData<Resource<List<CollectionPresentation>>> = MutableLiveData()
 
+    // whether the activity is busy or not, used for testing.
+    private var progress: Boolean = false
+
+    fun setInProgress(state: Boolean){
+        progress = state
+    }
+
+    fun isInProgress(): Boolean{
+        return progress
+    }
+
     fun isUserAuthenticated(): Boolean {
         return authService.getUser() != null
     }
-//
-//    fun getUserEmail(): String{
-//        return authService.getUser()?.email ?: ""
-//    }
-//
+
     fun getUserName(): String{
         return authService.getUser()?.displayName ?: ""
     }
-//
-//    fun signInWithEmail(email: String, password: String, onResult: (Boolean) -> Unit) {
-//        return authService.signIn(email,password) {isSuccessful ->
-//            if(isSuccessful){
-//                // user signed in
-//                onResult(true)
-//            } else {
-//                // user not signed in
-//                onResult(false)
-//            }
-//        }
-//    }
 
-//    fun register(email: String, password: String, name: String, onResult: (Boolean) -> Unit) {
-//        return authService.register(email, password, name) {isSuccessfullyRegistered ->
-//            if(isSuccessfullyRegistered){
-//                // TODO create a new user in firestore...here in the viewmodel
-//
-//                onResult(true)
-//            } else {
-//                // TODO any other viewmodel work?
-//                onResult(false)
-//            }
-//        }
-//    }
+    fun deleteUser(){
+        setInProgress(true)
+        val user = authService.getUser()
+        if(user != null){
+            authService.deleteUser(user)
+        }
+        setInProgress(false)
+    }
 
     fun signOut(onResult: () -> Unit) {
         return authService.signOut(onResult)

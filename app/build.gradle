@@ -20,6 +20,8 @@ android {
         versionName rootProject.versionName
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // Cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         resConfigs "en" // Languages supported Auth UI
 
         kapt {
@@ -38,7 +40,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    //testing
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -59,6 +60,12 @@ android {
         // To grant permissions to Android M >= devices */
         //grantAllPermissions = true
     }
+    testOptions {
+        // This causes instrumented tests to start clean each test, clearing any state on
+        // the device.  So for example if any user is currently logged in it won't matter to
+        // the tests
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+    }
 }
 
 dependencies {
@@ -69,8 +76,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.navigation:navigation-fragment:$navigationVersion"
     implementation "android.arch.navigation:navigation-ui:$navigationVersion"
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    // implementation 'com.android.support:support-v4:27.1.1'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakCanaryVersion"
@@ -95,7 +101,7 @@ dependencies {
     //Remote
     implementation "com.google.firebase:firebase-firestore:$firestoreVersion"
     implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinReflectVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
     // Cache
     implementation "javax.inject:javax.inject:$javaxInjectVersion"
@@ -109,16 +115,17 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     testImplementation "android.arch.core:core-testing:$archTestingVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlin2Version"
+    testImplementation "android.arch.persistence.room:testing:$roomVersion"
+    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+
+    // Instrumented Testing
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation "com.android.support.test:rules:$rulesVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "com.squareup.spoon:spoon-client:$spoonClientVersion"
     androidTestImplementation "com.jraska:falcon-spoon-compat:$falconSpoonVerison"
     implementation "com.jraska:falcon:$falconVersion"
-
-    // Cache testing
-    testImplementation "android.arch.persistence.room:testing:$roomVersion"
-    testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    androidTestUtil "com.android.support.test:orchestrator:$orchestratorVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

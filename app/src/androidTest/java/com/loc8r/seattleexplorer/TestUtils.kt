@@ -1,47 +1,14 @@
 package com.loc8r.seattleexplorer
 
-import android.app.Activity
-import android.support.test.InstrumentationRegistry
-import android.support.test.InstrumentationRegistry.getInstrumentation
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
-import android.support.test.runner.lifecycle.Stage
-import com.jraska.falcon.FalconSpoonRule
-import timber.log.Timber
-
-
 class TestUtils {
 
     companion object {
+        const val BLANK_LOGIN_INVALID_ERROR_TEXT = "Invalid login Request"
+        const val LOGIN_BAD_EMAIL_ERROR_TEXT = "The email address is badly formatted."
+        const val LOGIN_WRONG_PASSWORD_ERROR_TEXT = "The password is invalid or the user does not have a password."
+        const val REGISTER_INVALID_ERROR_MESSAGE = "Invalid registration request"
+        const val REGISTER_EMAIL_ALREADY_ERROR = "The email address is already in use by another account."
 
-        private fun getActivityInstance(): Activity {
-            val currentActivity = arrayOf<Activity>()
-
-            val monitor: Runnable = Runnable {
-                val resumedActivity = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
-                val it = resumedActivity.iterator()
-                currentActivity[0] = it.next()
-            }
-
-            getInstrumentation().runOnMainSync(monitor)
-            return currentActivity[0]
-        }
-
-
-        fun getCurrentActivity(): Activity {
-            val currentActivity = arrayOf<Activity>()
-            InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                val resumedActivity = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
-                val it = resumedActivity.iterator()
-                currentActivity[0] = it.next()
-            }
-
-            return currentActivity[0]
-        }
-
-        fun screenShot(rule: FalconSpoonRule, tag: String) {
-            //rule.screenshot(getCurrentActivity(), tag)
-            rule.screenshot(getActivityInstance(), tag)
-            Timber.i("Screenshot taken: $tag")
-        }
     }
+
 }

@@ -102,18 +102,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
 
         // Set listeners
-        goto_poiList_bt?.setOnClickListener(this)
-        goto_colList_bt?.setOnClickListener(this)
+        home_btn_goto_poiList?.setOnClickListener(this)
+        home_btn_goto_colList?.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
         view.let {
             when (it) {
-                goto_poiList_bt -> {
+                home_btn_goto_poiList -> {
                     // This navigates according to the id's within the nav_graph, not a view in a layout
                     navController.navigate(R.id.action_homeFragment_to_poiListFragment)
                 }
-                goto_colList_bt -> {
+                home_btn_goto_colList -> {
                     navController.navigate(R.id.action_homeFragment_to_collectionsListFragment)
                 }
             }
